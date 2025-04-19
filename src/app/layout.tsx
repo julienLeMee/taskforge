@@ -7,6 +7,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/header';
 import { SessionProvider } from 'next-auth/react';
 import { auth } from '../../auth';
+import { AppSidebar } from '@/components/layout/app-sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,10 +37,18 @@ export default async function RootLayout({
             enableSystem={true}
             disableTransitionOnChange
           >
-            <Header />
-            <main className="pt-16">
-              {children}
-            </main>
+            <SidebarProvider>
+              <div className="flex min-h-screen">
+                <AppSidebar />
+                <div className="flex-1">
+                  <Header />
+                  <main className="pt-16 px-4">
+                    <SidebarTrigger />
+                    {children}
+                  </main>
+                </div>
+              </div>
+            </SidebarProvider>
           </ThemeProvider>
         </SessionProvider>
       </body>
