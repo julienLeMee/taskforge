@@ -14,4 +14,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Nous ajouterons les modèles plus tard
+// Un modèle utilisateur simple
+model User {
+  id            String    @id @default(cuid())  // Identifiant unique
+  name          String?   // Nom (optionnel)
+  email         String?   @unique  // Email (optionnel mais unique)
+  emailVerified DateTime?  // Date de vérification de l'email
+  image         String?   // URL de l'image de profil
+  password      String?   // Mot de passe (stocké de manière sécurisée)
+  createdAt     DateTime  @default(now())  // Date de création
+  updatedAt     DateTime  @updatedAt  // Date de mise à jour
+}
