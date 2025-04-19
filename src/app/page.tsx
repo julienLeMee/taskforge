@@ -1,30 +1,26 @@
 // src/app/page.tsx
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="fixed top-4 right-4">
-        <ThemeToggle />
-      </div>
-      <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+    <main className="flex min-h-screen flex-col items-center justify-center p-4">
+      <div className="container flex flex-col items-center justify-center gap-8 px-4">
+        <h1 className="text-5xl font-extrabold tracking-tight text-center sm:text-[5rem]">
           Task<span className="text-primary">Forge</span>
         </h1>
-        <p className="text-xl text-center max-w-lg">
+        <p className="text-xl text-center max-w-2xl text-muted-foreground">
           Application de gestion de projets personnels pour organiser efficacement vos tâches et projets.
         </p>
-        <div className="flex gap-4">
-          <Link href="/auth/signin">
-            <Button variant="default" size="lg">Connexion</Button>
-          </Link>
-          <Link href="/auth/signup">
-            <Button variant="outline" size="lg">Inscription</Button>
-          </Link>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl w-full mt-8">
+          <div className="p-6 rounded-lg border bg-card/50 hover:bg-card/80 transition-colors">
+            <h2 className="text-xl font-semibold mb-2">Gérez vos projets</h2>
+            <p className="text-muted-foreground">Créez, organisez et suivez vos projets personnels en toute simplicité.</p>
+          </div>
+          <div className="p-6 rounded-lg border bg-card/50 hover:bg-card/80 transition-colors">
+            <h2 className="text-xl font-semibold mb-2">Suivez vos tâches</h2>
+            <p className="text-muted-foreground">Gardez une vue claire sur vos tâches et leur avancement.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

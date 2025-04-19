@@ -4,8 +4,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
-
-// Chargement de la police Inter
+import { Header } from '@/components/layout/Header';
+import { SessionProvider } from '@/components/auth/SessionProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -24,14 +24,17 @@ export default function RootLayout({
         'min-h-screen bg-background font-sans antialiased',
         inter.className
       )}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={true}
-          disableTransitionOnChange
+        <SessionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={true}
+            disableTransitionOnChange
         >
-          {children}
-        </ThemeProvider>
+          <Header />
+            {children}
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );
