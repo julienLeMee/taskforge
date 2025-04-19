@@ -7,10 +7,10 @@ export default function Home() {
         <h1 className="text-5xl font-extrabold tracking-tight text-center sm:text-[5rem]">
           Task<span className="text-primary">Forge</span>
         </h1>
-        <p className="text-xl text-center max-w-2xl text-muted-foreground">
-          Application de gestion de projets personnels pour organiser efficacement vos tâches et projets.
+        <p className="lg:text-xl sm:text-base text-center max-w-2xl text-muted-foreground">
+          Organisez efficacement vos projets.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl w-full mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl w-full mt-4">
           <div className="p-6 rounded-lg border bg-card/50 hover:bg-card/80 transition-colors">
             <h2 className="text-xl font-semibold mb-2">Gérez vos projets</h2>
             <p className="text-muted-foreground">Créez, organisez et suivez vos projets personnels en toute simplicité.</p>
