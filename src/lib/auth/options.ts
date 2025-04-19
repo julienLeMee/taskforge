@@ -16,11 +16,12 @@ export const authOptions: NextAuthConfig = {
         password: { label: "Password", type: "password" }
       },
       async authorize() {
-        // Logique d'authentification à implémenter
+        // Nous implémenterons cette logique plus tard
+        // Pour l'instant, retournons null (échec d'authentification)
         return null;
       }
     }),
-    // Vous pouvez commenter ces providers si vous n'avez pas encore les clés API
+    // Vous pouvez activer ces providers quand vous aurez les clés API
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
@@ -37,6 +38,11 @@ export const authOptions: NextAuthConfig = {
     signIn: "/auth/signin",
   },
   callbacks: {
-    // Callbacks à implémenter plus tard
+    async session({ session, token }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
   },
 };
