@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 
 export default async function Dashboard() {
   const session = await auth();
+  //   console.log(session);
 
-  // Rediriger vers la page de connexion si l'utilisateur n'est pas authentifié
   if (!session) {
     redirect("/auth/signin");
   }
