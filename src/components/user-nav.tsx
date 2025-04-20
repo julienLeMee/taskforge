@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
-
+import { User, LogOut } from "lucide-react"
 interface UserNavProps {
   user: {
     name?: string | null
@@ -65,13 +65,8 @@ export function UserNav({ user }: UserNavProps) {
             className="cursor-pointer"
             onSelect={() => router.push("/account")}
           >
+            <User className="w-4 h-4 mr-2" />
             Mon compte
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onSelect={() => router.push("/dashboard")}
-          >
-            Tableau de bord
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -79,6 +74,7 @@ export function UserNav({ user }: UserNavProps) {
           className="cursor-pointer"
           onSelect={() => signOut({ callbackUrl: "/" })}
         >
+          <LogOut className="w-4 h-4 mr-2" />
           Se déconnecter
         </DropdownMenuItem>
       </DropdownMenuContent>

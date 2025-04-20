@@ -4,12 +4,12 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
-import { Header } from '@/components/header';
+// import { Header } from '@/components/header';
 import { SessionProvider } from 'next-auth/react';
 import { auth } from '../../auth';
 import { AppSidebar } from '@/components/layout/app-sidebar';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { UserNav } from '@/components/user-nav';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -38,12 +38,20 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <div className="relative min-h-screen">
-              <Header />
+              {/* <Header /> */}
               <SidebarProvider>
-                <div className="flex">
+                <div className="flex flex-1">
                   <AppSidebar />
-                  <main className="flex-1 px-4 pt-16">
-                    <SidebarTrigger />
+                  <main className="flex-1 p-4">
+                    <div className="flex items-center justify-end">
+                        {session?.user && (
+                            <UserNav user={{
+                                name: session.user.name,
+                                email: session.user.email,
+                                image: session.user.image
+                            }} />
+                        )}
+                    </div>
                     {children}
                   </main>
                 </div>

@@ -3,30 +3,103 @@
 ## Arborescence des fichiers
 
 ```
-TaskForge/
-├── 📁 src/                      # Code source principal
-│   ├── 📁 app/                  # Application Next.js
-│   │   ├── 📄 page.tsx         # Page principale
-│   │   ├── 📄 layout.tsx       # Layout principal
-│   │   ├── 📄 globals.css      # Styles globaux
-│   │   └── 📁 api/             # Routes API
-│   └── 📁 lib/                 # Utilitaires et fonctions partagées
-│
-├── 📁 prisma/                   # Configuration base de données
-│   └── 📄 schema.prisma        # Schéma de la base de données
-│
-├── 📁 public/                   # Assets statiques
-├── 📁 .next/                    # Build Next.js (généré)
-├── 📁 node_modules/            # Dépendances (généré)
-├── 📄 .env                      # Variables d'environnement
-├── 📄 package.json             # Dépendances et scripts
-├── 📄 package-lock.json        # Versions exactes des dépendances
-├── 📄 tsconfig.json            # Configuration TypeScript
-├── 📄 next.config.ts           # Configuration Next.js
-├── 📄 postcss.config.mjs       # Configuration PostCSS
-├── 📄 eslint.config.mjs        # Configuration ESLint
-├── 📄 components.json          # Configuration des composants
-└── 📄 .gitignore              # Fichiers ignorés par Git
+.
+├── README.md
+├── STRUCTURE.md
+├── auth.ts
+├── components.json
+├── eslint.config.mjs
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── prisma
+│   ├── migrations
+│   │   ├── 20250419004352_init
+│   │   │   └── migration.sql
+│   │   ├── 20250419043245_init
+│   │   │   └── migration.sql
+│   │   ├── 20250419043343_init
+│   │   │   └── migration.sql
+│   │   └── migration_lock.toml
+│   └── schema.prisma
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── scripts
+│   └── update-password.ts
+├── src
+│   ├── app
+│   │   ├── account
+│   │   │   └── page.tsx
+│   │   ├── api
+│   │   │   ├── auth
+│   │   │   └── user
+│   │   ├── auth
+│   │   │   ├── signin
+│   │   │   └── signup
+│   │   ├── dashboard
+│   │   │   └── page.tsx
+│   │   ├── favicon.ico
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── projects
+│   │   │   └── page.tsx
+│   │   └── tasks
+│   │       └── page.tsx
+│   ├── components
+│   │   ├── auth
+│   │   │   └── SessionProvider.tsx
+│   │   ├── dashboard
+│   │   ├── header.tsx
+│   │   ├── layout
+│   │   │   └── Header.tsx
+│   │   │   └── app-sidebar.tsx
+│   │   ├── projects
+│   │   ├── settings
+│   │   │   └── PasswordChangeForm.tsx
+│   │   ├── tasks
+│   │   ├── theme-provider.tsx
+│   │   ├── theme-toggle.tsx
+│   │   ├── ui
+│   │   │   ├── avatar.tsx
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── dropdown-menu.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── scroll-area.tsx
+│   │   │   ├── separator.tsx
+│   │   │   ├── sheet.tsx
+│   │   │   ├── sidebar.tsx
+│   │   │   ├── skeleton.tsx
+│   │   │   └── tooltip.tsx
+│   │   └── user-nav.tsx
+│   ├── hooks
+│   │   └── use-mobile.ts
+│   ├── lib
+│   │   ├── auth
+│   │   │   └── options.ts
+│   │   ├── db
+│   │   │   └── index.ts
+│   │   ├── prisma.ts
+│   │   ├── utils
+│   │   │   └── index.ts
+│   │   ├── utils.ts
+│   │   └── validations
+│   │       ├── index.ts
+│   │       ├── project.ts
+│   │       ├── task.ts
+│   │       └── user.ts
+│   └── types
+└── tsconfig.json
+
+35 directories, 60 files
+```
 
 ## État d'avancement
 

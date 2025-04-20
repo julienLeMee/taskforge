@@ -11,7 +11,7 @@ export default async function AccountPage() {
   }
 
   return (
-    <div className="container space-y-6 p-8 pt-6">
+    <div className="container space-y-6 p-2 pt-6">
       <div className="flex items-center justify-between space-y-2">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Mon compte</h1>
