@@ -37,18 +37,18 @@ export default async function RootLayout({
             enableSystem={true}
             disableTransitionOnChange
           >
-            <SidebarProvider>
-              <div className="flex min-h-screen flex-1">
-                <AppSidebar />
-                <div className="flex-1">
-                  <Header />
-                  <main className="pt-16 px-4">
+            <div className="relative min-h-screen">
+              <Header />
+              <SidebarProvider>
+                <div className="flex">
+                  <AppSidebar />
+                  <main className="flex-1 px-4 pt-16">
                     <SidebarTrigger />
                     {children}
                   </main>
                 </div>
-              </div>
-            </SidebarProvider>
+              </SidebarProvider>
+            </div>
           </ThemeProvider>
         </SessionProvider>
       </body>
