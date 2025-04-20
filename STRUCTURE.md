@@ -56,9 +56,7 @@
 │   │   ├── auth
 │   │   │   └── SessionProvider.tsx
 │   │   ├── dashboard
-│   │   ├── header.tsx
 │   │   ├── layout
-│   │   │   └── Header.tsx
 │   │   │   └── app-sidebar.tsx
 │   │   ├── projects
 │   │   ├── settings
@@ -98,7 +96,8 @@
 │   └── types
 └── tsconfig.json
 
-35 directories, 60 files
+35 directories, 57 files
+
 ```
 
 ## État d'avancement
