@@ -308,7 +308,7 @@ export default function TasksPage() {
 
   return (
     <div className="space-y-6 p-2 pt-4 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-start mb-6">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold">Priorités</h1>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
