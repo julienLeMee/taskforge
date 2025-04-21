@@ -77,6 +77,9 @@ model Task {
   // Meeting
   isMeeting     Boolean    @default(false)
 
+  // Done
+  isDone        Boolean    @default(false)
+  
   // Dates
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt

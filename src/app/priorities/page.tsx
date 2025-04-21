@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Ellipsis } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -34,6 +34,12 @@ import {
   import { Textarea } from "@/components/ui/textarea";
   import { Checkbox } from "@/components/ui/checkbox";
   import { Skeleton } from "@/components/ui/skeleton";
+  import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu";
 // Type pour représenter une tâche
 type Task = {
   id: string;
@@ -47,6 +53,7 @@ type Task = {
   dueDate: string | null;
   createdAt: string;
   updatedAt: string;
+  isDone: boolean;
 };
 
 export default function TasksPage() {
@@ -63,6 +70,7 @@ const [newTask, setNewTask] = useState({
     timeframe: undefined as Task["timeframe"],
     isSupport: false,
     isMeeting: false,
+    isDone: false,
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -123,6 +131,7 @@ const handleCreateTask = async (e: React.FormEvent) => {
         timeframe: undefined as Task["timeframe"],
         isSupport: false,
         isMeeting: false,
+        isDone: false,
       });
 
       // Fermer le Dialog
@@ -138,6 +147,86 @@ const handleCreateTask = async (e: React.FormEvent) => {
       toast({
         title: "Erreur",
         description: error instanceof Error ? error.message : "Erreur lors de la création de la tâche",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleTaskDoneChange = async (id: string, isDone: boolean) => {
+    try {
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+
+      const previousStatus = task.status;
+      const newStatus = isDone ? "COMPLETED" as const : (previousStatus === "COMPLETED" ? "TODO" as const : previousStatus);
+
+      // Optimistic update
+      setTasks(tasks.map(t => t.id === id ? {...t, isDone, status: newStatus} : t));
+
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isDone,
+          status: newStatus
+        }),
+      });
+
+      if (!response.ok) {
+        // Rollback on error
+        setTasks(tasks.map(t => t.id === id ? {...t, isDone: !isDone, status: previousStatus} : t));
+        throw new Error("Erreur lors de la mise à jour de la tâche");
+      }
+
+      const updatedTask = await response.json();
+      // Update with server response
+      setTasks(tasks.map(t => t.id === id ? updatedTask : t));
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la mise à jour de la tâche",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUpdateTask = async (id: string, updatedTask: Task) => {
+    try {
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTask),
+      });
+      if (!response.ok) {
+        throw new Error("Erreur lors de la mise à jour de la tâche");
+      }
+      setTasks(tasks.map(task => task.id === id ? updatedTask : task));
+    } catch (error) {
+      console.error("Erreur:", error);
+    }
+  };
+
+
+
+  const handleDeleteTask = async (id: string) => {
+    try {
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Erreur lors de la suppression de la tâche");
+      }
+      setTasks(tasks.filter(task => task.id !== id));
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la suppression de la tâche",
         variant: "destructive",
       });
     }
@@ -319,6 +408,7 @@ const handleCreateTask = async (e: React.FormEvent) => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead></TableHead>
                 <TableHead>Titre</TableHead>
                 <TableHead>Statut</TableHead>
                 <TableHead>Priorité</TableHead>
@@ -329,11 +419,21 @@ const handleCreateTask = async (e: React.FormEvent) => {
             </TableHeader>
             <TableBody>
               {tasks.map((task) => (
-                <TableRow key={task.id}>
-                  <TableCell className={`font-medium ${
+                <TableRow key={task.id} className={`${task.isDone ? "bg-muted" : ""}`}>
+                  <TableCell className={`${
                     task.isSupport ? "border-l-2 border-primary" :
                     task.isMeeting ? "border-l-2 border-secondary" : ""
                     }`}>
+                    <Checkbox
+                      id={task.id}
+                      checked={task.isDone}
+                      onCheckedChange={(checked) => {
+                        setTasks(tasks.map(t => t.id === task.id ? {...t, isDone: checked as boolean} : t));
+                        handleTaskDoneChange(task.id, checked as boolean);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell className={`font-medium ${task.isDone ? "line-through" : ""}`}>
                     {task.title}
                   </TableCell>
                   <TableCell>
@@ -351,7 +451,7 @@ const handleCreateTask = async (e: React.FormEvent) => {
                       </Badge>
                     ) : null}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className={`${task.isDone ? "line-through" : ""}`}>
                     {task.isMeeting ? ("-") : task.timeframe ? (
                       task.timeframe === "TODAY" ? "Aujourd'hui" :
                       task.timeframe === "THIS_WEEK" ? "Cette semaine" :
@@ -375,14 +475,23 @@ const handleCreateTask = async (e: React.FormEvent) => {
                   </TableCell>
                   {/* <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell> */}
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <Pencil className="h-4 w-4" />
-                      <span className="sr-only">Modifier</span>
-                    </Button>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <Trash2 className="h-4 w-4" />
-                      <span className="sr-only">Supprimer</span>
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Ellipsis className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => handleUpdateTask(task.id, task)} className="cursor-pointer">
+                          <Pencil className="h-4 w-4" />
+                          <span className="">Modifier</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleDeleteTask(task.id)} className="cursor-pointer">
+                          <Trash2 className="h-4 w-4" />
+                          <span className="">Supprimer</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))}
