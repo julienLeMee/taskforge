@@ -40,6 +40,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu";
+// import Link from "next/link";
+
 // Type pour représenter une tâche
 type Task = {
   id: string;
@@ -595,7 +597,9 @@ const handleCreateTask = async (e: React.FormEvent) => {
                     />
                   </TableCell>
                   <TableCell className={`font-medium ${task.isDone ? "line-through" : ""}`}>
-                    {task.title}
+                    <span onClick={() => handleUpdateTask(task.id, task)} className="cursor-pointer hover:underline">
+                      {task.title}
+                    </span>
                   </TableCell>
                   <TableCell>
                     {task.isMeeting ? ("-") : task.status ? (
