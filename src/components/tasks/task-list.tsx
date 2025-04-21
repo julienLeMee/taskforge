@@ -38,7 +38,6 @@ export function TaskList({ myTasksOnly = false, supportOnly = false, projectKey 
     const fetchTasks = async () => {
       try {
         const params = new URLSearchParams();
-        // Toujours récupérer mes tâches
         params.append('myTasks', 'true');
         if (supportOnly) params.append('support', 'true');
         if (projectKey) params.append('projectKey', projectKey);
@@ -81,32 +80,30 @@ export function TaskList({ myTasksOnly = false, supportOnly = false, projectKey 
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div className="text-sm text-muted-foreground">
-          {tasks.length > 0 && (
-            <>
-              Total : {tasks.length} tâche{tasks.length > 1 ? 's' : ''}
-            </>
-          )}
-        </div>
+    <div className="w-full">
+      <div className="mb-4 text-sm text-muted-foreground">
+        {tasks.length > 0 && (
+          <>
+            Total : {tasks.length} tâche{tasks.length > 1 ? 's' : ''}
+          </>
+        )}
       </div>
 
-      <div className="rounded-md border">
-        <div className="overflow-x-auto">
+      <div className="w-full border rounded-md">
+        <div className="min-w-full table-fixed">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[80px]">Clé</TableHead>
-                <TableHead className="min-w-[400px]">Résumé</TableHead>
-                <TableHead className="w-[100px]">Projet</TableHead>
-                <TableHead className="w-[120px]">Date d&apos;échéance</TableHead>
+                <TableHead className="w-24">Clé</TableHead>
+                <TableHead className="w-[60%]">Résumé</TableHead>
+                <TableHead className="w-32">Projet</TableHead>
+                <TableHead className="w-32">Échéance</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {tasks.map((task) => (
                 <TableRow key={task.id}>
-                  <TableCell className="whitespace-nowrap">
+                  <TableCell className="font-medium">
                     <Link
                       href={`https://activis.atlassian.net/browse/${task.key}`}
                       target="_blank"
@@ -115,11 +112,13 @@ export function TaskList({ myTasksOnly = false, supportOnly = false, projectKey 
                       {task.key}
                     </Link>
                   </TableCell>
-                  <TableCell className="max-w-[400px] truncate">
+                  <TableCell className="max-w-0 overflow-hidden text-ellipsis">
                     {task.summary}
                   </TableCell>
-                  <TableCell className="whitespace-nowrap">{task.project.name}</TableCell>
-                  <TableCell className="whitespace-nowrap">
+                  <TableCell className="truncate">
+                    {task.project.name}
+                  </TableCell>
+                  <TableCell>
                     {task.dueDate ? formatDate(task.dueDate) : "Non définie"}
                   </TableCell>
                 </TableRow>
