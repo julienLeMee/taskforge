@@ -62,11 +62,21 @@ export function TaskList({ myTasksOnly = false, supportOnly = false, projectKey 
   }, [myTasksOnly, supportOnly, projectKey]);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    if (!dateString) return "Non définie";
+    try {
+      const date = new Date(dateString);
+      if (typeof window === 'undefined') {
+        return dateString; // Retourne la date brute côté serveur
+      }
+      return date.toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return "Date invalide";
+    }
   };
 
   if (loading) {
@@ -95,7 +105,7 @@ export function TaskList({ myTasksOnly = false, supportOnly = false, projectKey 
             <TableHeader>
               <TableRow>
                 <TableHead className="w-24">Clé</TableHead>
-                <TableHead className="w-[60%]">Résumé</TableHead>
+                <TableHead className="w-full">Résumé</TableHead>
                 {/* <TableHead className="w-32">Projet</TableHead> */}
                 <TableHead className="w-32">Échéance</TableHead>
               </TableRow>
