@@ -1,31 +1,33 @@
 import { auth } from "../../auth";
 import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function Home() {
   const session = await auth();
   if (session) {
     redirect("/dashboard");
-  }
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="container flex flex-col items-center justify-center gap-8 px-4">
+  } else {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center p-4">
+        <div className="container flex flex-col items-center justify-center gap-8 px-4">
         <h1 className="text-5xl font-extrabold tracking-tight text-center sm:text-[5rem]">
           Task<span className="text-primary">Forge</span>
         </h1>
         <p className="lg:text-xl sm:text-base text-center max-w-2xl text-muted-foreground">
           Organisez efficacement vos projets.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl w-full mt-4">
-          <div className="p-6 rounded-lg border bg-card/50 hover:bg-card/80 transition-colors">
-            <h2 className="text-xl font-semibold mb-2">Gérez vos projets</h2>
-            <p className="text-muted-foreground">Créez, organisez et suivez vos projets personnels en toute simplicité.</p>
-          </div>
-          <div className="p-6 rounded-lg border bg-card/50 hover:bg-card/80 transition-colors">
-            <h2 className="text-xl font-semibold mb-2">Suivez vos tâches</h2>
-            <p className="text-muted-foreground">Gardez une vue claire sur vos tâches et leur avancement.</p>
+        {/* TODO: Add a login button and a signup button */}
+        <div className="flex flex-col gap-4">
+          <Link href="/auth/signin">
+            <Button>Login</Button>
+          </Link>
+          <Link href="/auth/signup">
+            <Button>Signup</Button>
+          </Link>
           </div>
         </div>
-      </div>
-    </main>
-  );
+      </main>
+    );
+  }
 }

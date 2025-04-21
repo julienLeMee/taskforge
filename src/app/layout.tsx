@@ -8,7 +8,7 @@ import { SessionProvider } from 'next-auth/react';
 import { auth } from '../../auth';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { UserNav } from '@/components/user-nav';
+import { UserNavClient } from '@/components/layout/user-nav-client';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -43,13 +43,7 @@ export default async function RootLayout({
                   <AppSidebar />
                   <main className="flex-1 p-4">
                     <div className="flex items-center justify-end">
-                        {session?.user && (
-                            <UserNav user={{
-                                name: session.user.name,
-                                email: session.user.email,
-                                image: session.user.image
-                            }} />
-                        )}
+                      <UserNavClient />
                     </div>
                     {children}
                   </main>

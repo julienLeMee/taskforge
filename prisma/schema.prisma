@@ -48,6 +48,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  tasks         Task[]
 }
 
 model VerificationToken {
@@ -56,4 +57,50 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Modèle pour les tâches
+model Task {
+  id            String    @id @default(cuid())
+  title         String
+  description   String?   @db.Text
+  status        TaskStatus @default(TODO)
+  priority      Priority   @default(MEDIUM)
+
+  // Organisation temporelle
+  timeframe     Timeframe  @default(UPCOMING)
+  dueDate       DateTime?
+
+  // Support
+  isSupport     Boolean    @default(false)
+
+  // Dates
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  completedAt   DateTime?
+
+  // Relations
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  WAITING
+  COMPLETED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum Timeframe {
+  TODAY
+  THIS_WEEK
+  UPCOMING
+  BACKLOG
 }

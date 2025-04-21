@@ -4,9 +4,9 @@ import {
   LayoutDashboard,
   FolderKanban,
   CheckSquare,
-  Calendar,
-  Settings,
-  Users,
+//   Calendar,
+//   Settings,
+//   Users,
   Menu,
 } from "lucide-react"
 import {
@@ -46,24 +46,30 @@ const items = [
     href: "/tasks",
     icon: CheckSquare,
   },
-  {
-    title: "Calendrier",
-    href: "/calendar",
-    icon: Calendar,
-  },
-  {
-    title: "Équipe",
-    href: "/team",
-    icon: Users,
-  },
-  {
-    title: "Paramètres",
-    href: "/settings",
-    icon: Settings,
-  },
+//   {
+//     title: "Calendrier",
+//     href: "/calendar",
+//     icon: Calendar,
+//   },
+//   {
+//     title: "Équipe",
+//     href: "/team",
+//     icon: Users,
+//   },
+//   {
+//     title: "Paramètres",
+//     href: "/settings",
+//     icon: Settings,
+//   },
 ]
 
 function NavigationMenu({ pathname }: { pathname: string }) {
+  const { data: session } = useSession()
+
+  if (!session) {
+    return null
+  }
+
   return (
     <SidebarMenu>
       {items.map((item) => {
@@ -95,6 +101,10 @@ function NavigationMenu({ pathname }: { pathname: string }) {
 export function AppSidebar() {
   const pathname = usePathname()
   const { data: session } = useSession()
+
+  if (!session) {
+    return null
+  }
 
   return (
     <>
