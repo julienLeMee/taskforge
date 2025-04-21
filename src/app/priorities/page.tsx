@@ -268,7 +268,7 @@ const handleCreateTask = async (e: React.FormEvent) => {
               <span>Support</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="h-4 w-0.5 bg-secondary rounded-full"></div>
+              <div className="h-4 w-0.5 dark:bg-secondary bg-foreground rounded-full"></div>
               <span>Meet</span>
             </div>
           </div>
@@ -585,7 +585,7 @@ const handleCreateTask = async (e: React.FormEvent) => {
                 <TableRow key={task.id} className={`${task.isDone ? "bg-muted" : ""}`}>
                   <TableCell className={`${
                     task.isSupport ? "border-l-2 border-primary" :
-                    task.isMeeting ? "border-l-2 border-secondary" : ""
+                    task.isMeeting ? "border-l-2 dark:border-secondary border-foreground" : ""
                     }`}>
                     <Checkbox
                       id={task.id}
