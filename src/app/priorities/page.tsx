@@ -60,9 +60,12 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+  const [taskToUpdate, setTaskToUpdate] = useState<Task | null>(null);
 
   // État du formulaire
-const [newTask, setNewTask] = useState({
+  const [newTask, setNewTask] = useState({
     title: "",
     description: "",
     status: undefined as Task["status"],
@@ -72,7 +75,6 @@ const [newTask, setNewTask] = useState({
     isMeeting: false,
     isDone: false,
   });
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Charger les tâches au chargement de la page
   useEffect(() => {
@@ -193,25 +195,46 @@ const handleCreateTask = async (e: React.FormEvent) => {
     }
   };
 
-  const handleUpdateTask = async (id: string, updatedTask: Task) => {
+  const handleUpdateTask = async (id: string, task: Task) => {
+    setTaskToUpdate(task);
+    setIsUpdateDialogOpen(true);
+  };
+
+  const handleUpdateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!taskToUpdate) return;
+
     try {
-      const response = await fetch(`/api/tasks/${id}`, {
+      const response = await fetch(`/api/tasks/${taskToUpdate.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedTask),
+        body: JSON.stringify(taskToUpdate),
       });
+
       if (!response.ok) {
         throw new Error("Erreur lors de la mise à jour de la tâche");
       }
-      setTasks(tasks.map(task => task.id === id ? updatedTask : task));
+
+      const updatedTask = await response.json();
+      setTasks(tasks.map(t => t.id === updatedTask.id ? updatedTask : t));
+      setIsUpdateDialogOpen(false);
+      setTaskToUpdate(null);
+
+      toast({
+        title: "Succès",
+        description: "La tâche a été mise à jour avec succès",
+      });
     } catch (error) {
       console.error("Erreur:", error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la mise à jour de la tâche",
+        variant: "destructive",
+      });
     }
   };
-
-
 
   const handleDeleteTask = async (id: string) => {
     try {
@@ -393,6 +416,145 @@ const handleCreateTask = async (e: React.FormEvent) => {
 
       </div>
 
+      <Dialog open={isUpdateDialogOpen} onOpenChange={setIsUpdateDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <form onSubmit={handleUpdateSubmit}>
+            <DialogHeader>
+              <DialogTitle>Modifier la priorité</DialogTitle>
+              <DialogDescription>
+                Modifiez les informations de la priorité.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="updateIsMeeting" className="text-right">
+                  Réunion
+                </Label>
+                <div className="col-span-3 flex items-center space-x-2">
+                  <Checkbox
+                    id="updateIsMeeting"
+                    checked={taskToUpdate?.isMeeting}
+                    onCheckedChange={(checked) => {
+                      if (!taskToUpdate) return;
+                      setTaskToUpdate({
+                        ...taskToUpdate,
+                        isMeeting: checked as boolean,
+                        ...(checked ? {
+                          status: undefined,
+                          timeframe: undefined,
+                        } : {})
+                      });
+                    }}
+                  />
+                  <Label htmlFor="updateIsMeeting">Cette tâche est une réunion</Label>
+                </div>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="updateTitle" className="text-right">
+                  Titre
+                </Label>
+                <Input
+                  id="updateTitle"
+                  value={taskToUpdate?.title}
+                  onChange={(e) => taskToUpdate && setTaskToUpdate({ ...taskToUpdate, title: e.target.value })}
+                  className="col-span-3"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="updateDescription" className="text-right">
+                  Description
+                </Label>
+                <Textarea
+                  id="updateDescription"
+                  value={taskToUpdate?.description || ""}
+                  onChange={(e) => taskToUpdate && setTaskToUpdate({ ...taskToUpdate, description: e.target.value })}
+                  className="col-span-3"
+                  rows={3}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="updateStatus" className="text-right">
+                  Statut
+                </Label>
+                <Select
+                  value={taskToUpdate?.status || ""}
+                  onValueChange={(value) => taskToUpdate && setTaskToUpdate({ ...taskToUpdate, status: value as Task["status"] })}
+                  disabled={taskToUpdate?.isMeeting}
+                >
+                  <SelectTrigger id="updateStatus" className="col-span-3">
+                    <SelectValue placeholder="Sélectionnez un statut" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="TODO">À faire</SelectItem>
+                    <SelectItem value="IN_PROGRESS">En cours</SelectItem>
+                    <SelectItem value="WAITING">En attente</SelectItem>
+                    <SelectItem value="COMPLETED">Terminé</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="updatePriority" className="text-right">
+                  Priorité
+                </Label>
+                <Select
+                  value={taskToUpdate?.priority || "MEDIUM"}
+                  onValueChange={(value) => taskToUpdate && setTaskToUpdate({ ...taskToUpdate, priority: value as Task["priority"] })}
+                >
+                  <SelectTrigger id="updatePriority" className="col-span-3">
+                    <SelectValue placeholder="Sélectionnez une priorité" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="LOW">Basse</SelectItem>
+                    <SelectItem value="MEDIUM">Moyenne</SelectItem>
+                    <SelectItem value="HIGH">Haute</SelectItem>
+                    <SelectItem value="URGENT">Urgente</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="updateTimeframe" className="text-right">
+                  Échéance
+                </Label>
+                <Select
+                  value={taskToUpdate?.timeframe || ""}
+                  onValueChange={(value) => taskToUpdate && setTaskToUpdate({ ...taskToUpdate, timeframe: value as Task["timeframe"] })}
+                  disabled={taskToUpdate?.isMeeting}
+                >
+                  <SelectTrigger id="updateTimeframe" className="col-span-3">
+                    <SelectValue placeholder="Sélectionnez une échéance" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="TODAY">Aujourd&apos;hui</SelectItem>
+                    <SelectItem value="THIS_WEEK">Cette semaine</SelectItem>
+                    <SelectItem value="UPCOMING">À venir</SelectItem>
+                    <SelectItem value="BACKLOG">Backlog</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="updateIsSupport" className="text-right">
+                  Support
+                </Label>
+                <div className="col-span-3 flex items-center space-x-2">
+                  <Checkbox
+                    id="updateIsSupport"
+                    checked={taskToUpdate?.isSupport}
+                    onCheckedChange={(checked) =>
+                      taskToUpdate && setTaskToUpdate({ ...taskToUpdate, isSupport: checked as boolean })
+                    }
+                  />
+                  <Label htmlFor="updateIsSupport">Cette tâche est liée au support</Label>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="submit">Mettre à jour</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       {loading ? (
         <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
@@ -411,9 +573,8 @@ const handleCreateTask = async (e: React.FormEvent) => {
                 <TableHead></TableHead>
                 <TableHead>Titre</TableHead>
                 <TableHead>Statut</TableHead>
-                <TableHead>Priorité</TableHead>
                 <TableHead>Échéance</TableHead>
-                {/* <TableHead>Date de création</TableHead> */}
+                <TableHead>Priorité</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -473,7 +634,6 @@ const handleCreateTask = async (e: React.FormEvent) => {
                     </Badge>
                     ) : null}
                   </TableCell>
-                  {/* <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell> */}
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

@@ -96,7 +96,7 @@ export function TaskList({ myTasksOnly = false, supportOnly = false, projectKey 
               <TableRow>
                 <TableHead className="w-24">Clé</TableHead>
                 <TableHead className="w-[60%]">Résumé</TableHead>
-                <TableHead className="w-32">Projet</TableHead>
+                {/* <TableHead className="w-32">Projet</TableHead> */}
                 <TableHead className="w-32">Échéance</TableHead>
               </TableRow>
             </TableHeader>
@@ -115,9 +115,9 @@ export function TaskList({ myTasksOnly = false, supportOnly = false, projectKey 
                   <TableCell className="max-w-0 overflow-hidden text-ellipsis">
                     {task.summary}
                   </TableCell>
-                  <TableCell className="truncate">
+                  {/* <TableCell className="truncate">
                     {task.project.name}
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>
                     {task.dueDate ? formatDate(task.dueDate) : "Non définie"}
                   </TableCell>
