@@ -74,6 +74,9 @@ model Task {
   // Support
   isSupport     Boolean    @default(false)
 
+  // Meeting
+  isMeeting     Boolean    @default(false)
+
   // Dates
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt

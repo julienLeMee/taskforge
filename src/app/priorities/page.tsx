@@ -13,7 +13,27 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Pencil, Trash2 } from "lucide-react";
-
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog";
+  import { Input } from "@/components/ui/input";
+  import { Label } from "@/components/ui/label";
+  import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select";
+  import { Textarea } from "@/components/ui/textarea";
+  import { Checkbox } from "@/components/ui/checkbox";
+  import { Skeleton } from "@/components/ui/skeleton";
 // Type pour représenter une tâche
 type Task = {
   id: string;
@@ -23,6 +43,7 @@ type Task = {
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   timeframe: "TODAY" | "THIS_WEEK" | "UPCOMING" | "BACKLOG";
   isSupport: boolean;
+  isMeeting: boolean;
   dueDate: string | null;
   createdAt: string;
   updatedAt: string;
@@ -32,6 +53,18 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+
+  // État du formulaire
+const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    status: "TODO",
+    priority: "MEDIUM",
+    timeframe: "TODAY",
+    isSupport: false,
+    isMeeting: false,
+  });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Charger les tâches au chargement de la page
   useEffect(() => {
@@ -58,16 +91,202 @@ export default function TasksPage() {
     fetchTasks();
   }, [toast]);
 
+  // Fonction pour créer une nouvelle tâche
+const handleCreateTask = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erreur lors de la création de la tâche");
+      }
+
+      const createdTask = await response.json();
+
+      // Ajouter la nouvelle tâche à l'état
+      setTasks([createdTask, ...tasks]);
+
+      // Réinitialiser le formulaire
+      setNewTask({
+        title: "",
+        description: "",
+        status: "TODO",
+        priority: "MEDIUM",
+        timeframe: "TODAY",
+        isSupport: false,
+        isMeeting: false,
+      });
+
+      // Fermer le Dialog
+      setIsDialogOpen(false);
+
+      // Afficher un message toast
+      toast({
+        title: "Tâche créée",
+        description: "La tâche a été créée avec succès",
+      });
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de la création de la tâche",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="space-y-6 p-2 pt-4 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Gestion des tâches</h1>
-        <Button>Nouvelle tâche</Button>
+        <h1 className="text-3xl font-bold">Priorités</h1>
+
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+                <Button>Nouvelle priorité</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+                <form onSubmit={handleCreateTask}>
+                <DialogHeader>
+                    <DialogTitle>Créer une nouvelle priorité</DialogTitle>
+                    <DialogDescription>
+                    Remplissez les informations pour créer une nouvelle priorité.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="title" className="text-right">
+                        Titre
+                    </Label>
+                    <Input
+                        id="title"
+                        value={newTask.title}
+                        onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                        className="col-span-3"
+                        required
+                    />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="description" className="text-right">
+                        Description
+                    </Label>
+                    <Textarea
+                        id="description"
+                        value={newTask.description}
+                        onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                        className="col-span-3"
+                        rows={3}
+                    />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="status" className="text-right">
+                        Statut
+                    </Label>
+                    <Select
+                        value={newTask.status}
+                        onValueChange={(value) => setNewTask({ ...newTask, status: value })}
+                    >
+                        <SelectTrigger id="status" className="col-span-3">
+                        <SelectValue placeholder="Sélectionnez un statut" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        <SelectItem value="TODO">À faire</SelectItem>
+                        <SelectItem value="IN_PROGRESS">En cours</SelectItem>
+                        <SelectItem value="WAITING">En attente</SelectItem>
+                        <SelectItem value="COMPLETED">Terminé</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="priority" className="text-right">
+                        Priorité
+                    </Label>
+                    <Select
+                        value={newTask.priority}
+                        onValueChange={(value) => setNewTask({ ...newTask, priority: value })}
+                    >
+                        <SelectTrigger id="priority" className="col-span-3">
+                        <SelectValue placeholder="Sélectionnez une priorité" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        <SelectItem value="LOW">Basse</SelectItem>
+                        <SelectItem value="MEDIUM">Moyenne</SelectItem>
+                        <SelectItem value="HIGH">Haute</SelectItem>
+                        <SelectItem value="URGENT">Urgente</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="timeframe" className="text-right">
+                        Échéance
+                    </Label>
+                    <Select
+                        value={newTask.timeframe}
+                        onValueChange={(value) => setNewTask({ ...newTask, timeframe: value })}
+                    >
+                        <SelectTrigger id="timeframe" className="col-span-3">
+                        <SelectValue placeholder="Sélectionnez une échéance" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        <SelectItem value="TODAY">Aujourd&apos;hui</SelectItem>
+                        <SelectItem value="THIS_WEEK">Cette semaine</SelectItem>
+                        <SelectItem value="UPCOMING">À venir</SelectItem>
+                        <SelectItem value="BACKLOG">Backlog</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="isSupport" className="text-right">
+                            Tâche de support
+                        </Label>
+                        <div className="col-span-3 flex items-center space-x-2">
+                            <Checkbox
+                            id="isSupport"
+                            checked={newTask.isSupport}
+                            onCheckedChange={(checked) =>
+                                setNewTask({ ...newTask, isSupport: checked as boolean })
+                            }
+                            />
+                            <Label htmlFor="isSupport">Cette tâche est liée au support</Label>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="isMeeting" className="text-right">
+                            Tâche de réunion
+                        </Label>
+                        <div className="col-span-3 flex items-center space-x-2">
+                            <Checkbox
+                            id="isMeeting"
+                            checked={newTask.isMeeting}
+                            onCheckedChange={(checked) =>
+                                setNewTask({ ...newTask, isMeeting: checked as boolean })
+                            }
+                            />
+                            <Label htmlFor="isMeeting">Cette tâche est liée à une réunion</Label>
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button type="submit">Créer la tâche</Button>
+                </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+
       </div>
 
       {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <p>Chargement des tâches...</p>
+        <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+                <Skeleton key={i} className="h-12 w-full" />
+            ))}
         </div>
       ) : tasks.length === 0 ? (
         <div className="flex justify-center items-center h-40 border rounded-md">
@@ -82,14 +301,18 @@ export default function TasksPage() {
                 <TableHead>Statut</TableHead>
                 <TableHead>Priorité</TableHead>
                 <TableHead>Échéance</TableHead>
-                <TableHead>Date de création</TableHead>
+                {/* <TableHead>Date de création</TableHead> */}
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {tasks.map((task) => (
                 <TableRow key={task.id}>
-                  <TableCell className="font-medium">{task.title}</TableCell>
+                  <TableCell className={`font-medium
+                    ${task.isSupport ? "border-l-2 border-primary" : ""}
+                    ${task.isMeeting ? "border-l-2 border-white" : ""}`}>
+                        {task.title}
+                  </TableCell>
                   <TableCell>
                     <Badge
                       variant={
@@ -103,6 +326,11 @@ export default function TasksPage() {
                        task.status === "WAITING" ? "En attente" : "Terminé"}
                     </Badge>
                   </TableCell>
+                <TableCell>
+                {task.timeframe === "TODAY" ? "Aujourd'hui" :
+                    task.timeframe === "THIS_WEEK" ? "Cette semaine" :
+                    task.timeframe === "UPCOMING" ? "À venir" : "Backlog"}
+                </TableCell>
                   <TableCell>
                     <Badge
                       variant={
@@ -116,12 +344,7 @@ export default function TasksPage() {
                        task.priority === "HIGH" ? "Haute" : "Urgente"}
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    {task.timeframe === "TODAY" ? "Aujourd'hui" :
-                     task.timeframe === "THIS_WEEK" ? "Cette semaine" :
-                     task.timeframe === "UPCOMING" ? "À venir" : "Backlog"}
-                  </TableCell>
-                  <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell>
+                  {/* <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell> */}
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                       <Pencil className="h-4 w-4" />
