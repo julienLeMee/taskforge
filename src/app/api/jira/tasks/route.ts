@@ -56,9 +56,19 @@ export async function GET(request: Request) {
     const jiraEmail = process.env.JIRA_EMAIL || session.user.email;
 
     if (!jiraHost || !jiraToken || !jiraEmail) {
+      console.error("Configuration manquante:", {
+        jiraHost: !!jiraHost,
+        jiraToken: !!jiraToken,
+        jiraEmail: jiraEmail
+      });
       return NextResponse.json({
         error: "Configuration Jira manquante",
-        details: { hasHost: !!jiraHost, hasToken: !!jiraToken, hasEmail: !!jiraEmail }
+        details: {
+          hasHost: !!jiraHost,
+          hasToken: !!jiraToken,
+          hasEmail: !!jiraEmail,
+          email: jiraEmail
+        }
       }, { status: 500 });
     }
 
@@ -75,18 +85,27 @@ export async function GET(request: Request) {
       jqlParts.push('issuetype = "SOUTIEN"');
     }
 
-    if (myTasks) {
-      jqlParts.push(`assignee = "${jiraEmail}"`);
-    }
+    // Toujours filtrer par l'assignee
+    jqlParts.push(`assignee = "${jiraEmail}"`);
 
-    // Ajouter le tri par date de création
-    jqlParts.push('ORDER BY updated DESC');
+    // Exclure les tâches fermées (utiliser la catégorie de statut au lieu du statut spécifique)
+    jqlParts.push('statusCategory != Done');
 
-    const jql = jqlParts.join(' AND ');
+    // Construire la requête JQL finale
+    let jql = jqlParts.length > 0 ? jqlParts.join(' AND ') : '';
+
+    // Ajouter le tri par date d'échéance
+    jql += ' ORDER BY duedate ASC';
+
+    console.log("Configuration Jira:", {
+      host: jiraHost,
+      email: jiraEmail,
+      hasToken: !!jiraToken
+    });
     console.log("Requête JQL:", jql);
 
     const response = await fetch(
-      `${jiraHost}/rest/api/3/search?jql=${encodeURIComponent(jql)}&expand=names,schema&maxResults=50`,
+      `${jiraHost}/rest/api/3/search?jql=${encodeURIComponent(jql)}&expand=names,schema&maxResults=10000`,
       {
         method: 'GET',
         headers: {
@@ -112,14 +131,26 @@ export async function GET(request: Request) {
     }
 
     const data = await response.json();
+    // console.log("Total tasks from Jira:", data.total);
+    // console.log("Number of issues received:", data.issues.length);
+    // console.log("Current user email:", jiraEmail);
 
     // Formater les tâches pour l'affichage
-    const formattedIssues = data.issues.map((issue: JiraIssue) => ({
-      id: issue.id,
-      key: issue.key,
-      summary: issue.fields.summary,
-      description: issue.fields.description,
-      project: {
+    const formattedIssues = data.issues
+      .filter((issue: JiraIssue) => {
+        const matches = issue.fields.assignee?.emailAddress === jiraEmail;
+        if (matches) {
+          console.log("Matched task:", issue.key, "Assignee email:", issue.fields.assignee?.emailAddress);
+        }
+        return matches;
+      })
+      .map((issue: JiraIssue) => {
+      return {
+        id: issue.id,
+        key: issue.key,
+        summary: issue.fields.summary,
+        description: issue.fields.description,
+        project: {
         id: issue.fields.project.id,
         key: issue.fields.project.key,
         name: issue.fields.project.name
@@ -138,9 +169,12 @@ export async function GET(request: Request) {
         email: issue.fields.assignee.emailAddress
       } : null,
       created: issue.fields.created,
-      updated: issue.fields.updated,
-      sprint: issue.fields.customfield_10014
-    }));
+      dueDate: issue.fields.duedate,
+        sprint: issue.fields.customfield_10014
+      };
+    });
+
+    console.log("Formatted issues:", formattedIssues);
 
     return NextResponse.json({
       message: "Tâches récupérées avec succès",

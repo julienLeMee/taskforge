@@ -8,6 +8,7 @@ import {
 //   Settings,
 //   Users,
   Menu,
+  ArrowUpDown,
 } from "lucide-react"
 import {
   Sidebar,
@@ -35,6 +36,11 @@ const items = [
     title: "Tableau de bord",
     href: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Priorités",
+    href: "/priorities",
+    icon: ArrowUpDown,
   },
   {
     title: "Projets",
