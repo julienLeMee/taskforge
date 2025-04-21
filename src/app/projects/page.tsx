@@ -28,7 +28,7 @@ export default function ProjectsPage() {
     title: "",
     description: null,
     status: "En cours",
-    nextSteps: null,
+    nextSteps: [],
     deployment: null,
   });
 
@@ -80,7 +80,7 @@ export default function ProjectsPage() {
         title: "",
         description: null,
         status: "En cours",
-        nextSteps: null,
+        nextSteps: [],
         deployment: null,
       });
       setIsDialogOpen(false);
@@ -245,8 +245,8 @@ export default function ProjectsPage() {
               <TableRow>
                 <TableHead>Titre</TableHead>
                 <TableHead>Statut</TableHead>
+                <TableHead>Prochaines étapes</TableHead>
                 <TableHead>Déploiement</TableHead>
-                <TableHead>Dernière mise à jour</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>

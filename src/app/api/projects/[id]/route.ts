@@ -15,11 +15,9 @@ export async function GET(
       return NextResponse.json({ message: "Non autorisé" }, { status: 401 });
     }
 
-    const { id } = params;
-
     const project = await prisma.project.findUnique({
       where: {
-        id,
+        id: params.id,
         userId: session.user.id
       }
     });
@@ -50,14 +48,42 @@ export async function PATCH(
       return NextResponse.json({ message: "Non autorisé" }, { status: 401 });
     }
 
-    const { id } = params;
-    const json = await request.json();
-    const validatedData = projectSchema.parse(json);
+    let json = await request.json();
+
+    // Si on met à jour uniquement le statut, on utilise un schéma différent
+    if (Object.keys(json).length === 1 && 'status' in json) {
+      if (!['En cours', 'En pause', 'Terminé'].includes(json.status)) {
+        return NextResponse.json(
+          { message: "Statut invalide" },
+          { status: 400 }
+        );
+      }
+    } else {
+      // Assurez-vous que les champs optionnels sont explicitement null s'ils sont vides
+      const dataToValidate = {
+        ...json,
+        description: json.description || null,
+        deployment: json.deployment || null,
+        nextSteps: Array.isArray(json.nextSteps) ? json.nextSteps : [],
+      };
+
+      try {
+        projectSchema.parse(dataToValidate);
+      } catch (error) {
+        console.error("Erreur de validation:", error);
+        return NextResponse.json(
+          { message: "Données invalides", error },
+          { status: 400 }
+        );
+      }
+
+      json = dataToValidate; // Utiliser les données nettoyées
+    }
 
     // Vérifier si le projet existe et appartient à l'utilisateur
     const existingProject = await prisma.project.findUnique({
       where: {
-        id,
+        id: params.id,
         userId: session.user.id
       }
     });
@@ -67,8 +93,8 @@ export async function PATCH(
     }
 
     const updatedProject = await prisma.project.update({
-      where: { id },
-      data: validatedData
+      where: { id: params.id },
+      data: json
     });
 
     return NextResponse.json(updatedProject);
@@ -93,12 +119,10 @@ export async function DELETE(
       return NextResponse.json({ message: "Non autorisé" }, { status: 401 });
     }
 
-    const { id } = params;
-
     // Vérifier si le projet existe et appartient à l'utilisateur
     const existingProject = await prisma.project.findUnique({
       where: {
-        id,
+        id: params.id,
         userId: session.user.id
       }
     });
@@ -108,7 +132,7 @@ export async function DELETE(
     }
 
     await prisma.project.delete({
-      where: { id }
+      where: { id: params.id }
     });
 
     return NextResponse.json({ message: "Projet supprimé avec succès" });

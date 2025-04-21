@@ -1,9 +1,14 @@
+export interface NextStep {
+  text: string;
+  completed: boolean;
+}
+
 export interface Project {
   id: string;
   title: string;
   description: string | null;
   status: string;
-  nextSteps: any | null; // JSON type
+  nextSteps: NextStep[];
   deployment: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -14,7 +19,7 @@ export interface ProjectFormData {
   title: string;
   description: string | null;
   status: string;
-  nextSteps: any | null;
+  nextSteps: NextStep[];
   deployment: string | null;
 }
 

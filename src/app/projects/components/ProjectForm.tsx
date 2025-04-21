@@ -16,7 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ProjectFormData, ProjectUpdateData } from "../types";
+import { ProjectFormData, ProjectUpdateData, NextStep } from "../types";
+import { useState } from "react";
+import { Plus, X } from "lucide-react";
 
 interface BaseProjectFormProps {
   isOpen: boolean;
@@ -46,6 +48,8 @@ export function ProjectForm({
   setTask: setProject,
   mode,
 }: ProjectFormProps) {
+  const [newStep, setNewStep] = useState("");
+
   const description = mode === "create"
     ? "Remplissez les informations pour créer un nouveau projet"
     : "Modifiez les informations du projet";
@@ -62,6 +66,33 @@ export function ProjectForm({
         ...updates,
       } as ProjectUpdateData);
     }
+  };
+
+  const addNextStep = () => {
+    if (!newStep.trim()) return;
+    const newStepObj: NextStep = {
+      text: newStep.trim(),
+      completed: false,
+    };
+    handleUpdate({
+      nextSteps: [...(project.nextSteps || []), newStepObj],
+    });
+    setNewStep("");
+  };
+
+  const removeNextStep = (index: number) => {
+    const updatedSteps = [...(project.nextSteps || [])];
+    updatedSteps.splice(index, 1);
+    handleUpdate({ nextSteps: updatedSteps });
+  };
+
+  const toggleNextStep = (index: number) => {
+    const updatedSteps = [...(project.nextSteps || [])];
+    updatedSteps[index] = {
+      ...updatedSteps[index],
+      completed: !updatedSteps[index].completed,
+    };
+    handleUpdate({ nextSteps: updatedSteps });
   };
 
   return (
@@ -116,6 +147,60 @@ export function ProjectForm({
               onChange={(e) => handleUpdate({ deployment: e.target.value })}
               placeholder="URL de déploiement"
             />
+          </div>
+          <div className="space-y-2">
+            <Label>Prochaines étapes</Label>
+            <div className="flex gap-2">
+              <Input
+                value={newStep}
+                onChange={(e) => setNewStep(e.target.value)}
+                placeholder="Ajouter une étape"
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addNextStep();
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={addNextStep}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="space-y-2 mt-2">
+              {(project.nextSteps || []).map((step, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-secondary/50 p-2 rounded-md"
+                >
+                  <input
+                    type="checkbox"
+                    checked={step.completed}
+                    onChange={() => toggleNextStep(index)}
+                    className="h-4 w-4"
+                  />
+                  <span
+                    className={`flex-1 ${
+                      step.completed ? "line-through text-muted-foreground" : ""
+                    }`}
+                  >
+                    {step.text}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeNextStep(index)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="pt-4 flex justify-end">
             <Button type="submit">

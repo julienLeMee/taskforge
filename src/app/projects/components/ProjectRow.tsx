@@ -4,14 +4,9 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Project } from "../types";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Edit, Trash } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Edit, Trash, Ellipsis } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface ProjectRowProps {
   project: Project;
@@ -22,7 +17,7 @@ interface ProjectRowProps {
 
 export function ProjectRow({
   project,
-  onStatusChange,
+//   onStatusChange,
   onUpdateProject,
   onDeleteProject,
 }: ProjectRowProps) {
@@ -30,43 +25,47 @@ export function ProjectRow({
     <TableRow>
       <TableCell>{project.title}</TableCell>
       <TableCell>
-        <Select
-          value={project.status}
-          onValueChange={(value) => onStatusChange(project.id, value)}
-        >
-          <SelectTrigger className="w-[140px]">
-            <SelectValue placeholder="Statut" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="En cours">En cours</SelectItem>
-            <SelectItem value="En pause">En pause</SelectItem>
-            <SelectItem value="Terminé">Terminé</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* badge */}
+        <Badge variant="outline">{project.status}</Badge>
+      </TableCell>
+      <TableCell>
+        {project.nextSteps && project.nextSteps.length > 0 ? (
+          <div className="space-y-1">
+            {project.nextSteps.map((step, index) => (
+              <div
+                key={index}
+                className={`text-sm ${
+                  step.completed ? "line-through text-muted-foreground" : ""
+                }`}
+              >
+                • {step.text}
+              </div>
+            ))}
+          </div>
+        ) : (
+          "-"
+        )}
       </TableCell>
       <TableCell>{project.deployment || "-"}</TableCell>
-      <TableCell>
-        {new Date(project.updatedAt).toLocaleDateString("fr-FR", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })}
-      </TableCell>
       <TableCell className="text-right space-x-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onUpdateProject(project)}
-        >
-          <Edit className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onDeleteProject(project.id)}
-        >
-          <Trash className="h-4 w-4" />
-        </Button>
+        {/* dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Ellipsis className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => onUpdateProject(project)} className="cursor-pointer">
+              <Edit className="h-4 w-4" />
+              Modifier
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDeleteProject(project.id)} className="cursor-pointer">
+              <Trash className="h-4 w-4" />
+              Supprimer
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </TableCell>
     </TableRow>
   );

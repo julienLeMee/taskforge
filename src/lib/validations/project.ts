@@ -7,10 +7,10 @@ export const nextStepSchema = z.object({
 
 export const projectSchema = z.object({
   title: z.string().min(1, "Le titre est requis"),
-  description: z.string().optional(),
+  description: z.string().nullable(),
   status: z.string().default("En cours"),
   nextSteps: z.array(nextStepSchema).default([]),
-  deployment: z.string().optional(),
+  deployment: z.string().nullable(),
 });
 
 export type ProjectFormValues = z.infer<typeof projectSchema>;
