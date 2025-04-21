@@ -39,9 +39,9 @@ type Task = {
   id: string;
   title: string;
   description: string | null;
-  status: "TODO" | "IN_PROGRESS" | "WAITING" | "COMPLETED";
+  status: "TODO" | "IN_PROGRESS" | "WAITING" | "COMPLETED" | undefined;
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-  timeframe: "TODAY" | "THIS_WEEK" | "UPCOMING" | "BACKLOG";
+  timeframe: "TODAY" | "THIS_WEEK" | "UPCOMING" | "BACKLOG" | undefined;
   isSupport: boolean;
   isMeeting: boolean;
   dueDate: string | null;
@@ -58,9 +58,9 @@ export default function TasksPage() {
 const [newTask, setNewTask] = useState({
     title: "",
     description: "",
-    status: "TODO",
-    priority: "MEDIUM",
-    timeframe: "TODAY",
+    status: undefined as Task["status"],
+    priority: "MEDIUM" as Task["priority"],
+    timeframe: undefined as Task["timeframe"],
     isSupport: false,
     isMeeting: false,
   });
@@ -118,9 +118,9 @@ const handleCreateTask = async (e: React.FormEvent) => {
       setNewTask({
         title: "",
         description: "",
-        status: "TODO",
-        priority: "MEDIUM",
-        timeframe: "TODAY",
+        status: undefined as Task["status"],
+        priority: "MEDIUM" as Task["priority"],
+        timeframe: undefined as Task["timeframe"],
         isSupport: false,
         isMeeting: false,
       });
@@ -146,7 +146,19 @@ const handleCreateTask = async (e: React.FormEvent) => {
   return (
     <div className="space-y-6 p-2 pt-4 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Priorités</h1>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold">Priorités</h1>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-0.5 bg-primary rounded-full"></div>
+              <span>Support</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-0.5 bg-secondary rounded-full"></div>
+              <span>Meet</span>
+            </div>
+          </div>
+        </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
@@ -161,6 +173,29 @@ const handleCreateTask = async (e: React.FormEvent) => {
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="isMeeting" className="text-right">
+                            Réunion
+                        </Label>
+                        <div className="col-span-3 flex items-center space-x-2">
+                            <Checkbox
+                            id="isMeeting"
+                            checked={newTask.isMeeting}
+                            onCheckedChange={(checked) => {
+                                setNewTask({
+                                    ...newTask,
+                                    isMeeting: checked as boolean,
+                                    // Reset status and timeframe if it's a meeting
+                                    ...(checked ? {
+                                        status: undefined,
+                                        timeframe: undefined,
+                                    } : {})
+                                })
+                            }}
+                            />
+                            <Label htmlFor="isMeeting">Cette tâche est une réunion</Label>
+                        </div>
+                    </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="title" className="text-right">
                         Titre
@@ -190,8 +225,9 @@ const handleCreateTask = async (e: React.FormEvent) => {
                         Statut
                     </Label>
                     <Select
-                        value={newTask.status}
-                        onValueChange={(value) => setNewTask({ ...newTask, status: value })}
+                        value={newTask.status || ""}
+                        onValueChange={(value) => setNewTask({ ...newTask, status: value as Task["status"] })}
+                        disabled={newTask.isMeeting}
                     >
                         <SelectTrigger id="status" className="col-span-3">
                         <SelectValue placeholder="Sélectionnez un statut" />
@@ -210,7 +246,7 @@ const handleCreateTask = async (e: React.FormEvent) => {
                     </Label>
                     <Select
                         value={newTask.priority}
-                        onValueChange={(value) => setNewTask({ ...newTask, priority: value })}
+                        onValueChange={(value: Task["priority"]) => setNewTask({ ...newTask, priority: value })}
                     >
                         <SelectTrigger id="priority" className="col-span-3">
                         <SelectValue placeholder="Sélectionnez une priorité" />
@@ -228,8 +264,9 @@ const handleCreateTask = async (e: React.FormEvent) => {
                         Échéance
                     </Label>
                     <Select
-                        value={newTask.timeframe}
-                        onValueChange={(value) => setNewTask({ ...newTask, timeframe: value })}
+                        value={newTask.timeframe || ""}
+                        onValueChange={(value) => setNewTask({ ...newTask, timeframe: value as Task["timeframe"] })}
+                        disabled={newTask.isMeeting}
                     >
                         <SelectTrigger id="timeframe" className="col-span-3">
                         <SelectValue placeholder="Sélectionnez une échéance" />
@@ -244,7 +281,7 @@ const handleCreateTask = async (e: React.FormEvent) => {
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="isSupport" className="text-right">
-                            Tâche de support
+                            Support
                         </Label>
                         <div className="col-span-3 flex items-center space-x-2">
                             <Checkbox
@@ -255,21 +292,6 @@ const handleCreateTask = async (e: React.FormEvent) => {
                             }
                             />
                             <Label htmlFor="isSupport">Cette tâche est liée au support</Label>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="isMeeting" className="text-right">
-                            Tâche de réunion
-                        </Label>
-                        <div className="col-span-3 flex items-center space-x-2">
-                            <Checkbox
-                            id="isMeeting"
-                            checked={newTask.isMeeting}
-                            onCheckedChange={(checked) =>
-                                setNewTask({ ...newTask, isMeeting: checked as boolean })
-                            }
-                            />
-                            <Label htmlFor="isMeeting">Cette tâche est liée à une réunion</Label>
                         </div>
                     </div>
                 </div>
@@ -308,41 +330,48 @@ const handleCreateTask = async (e: React.FormEvent) => {
             <TableBody>
               {tasks.map((task) => (
                 <TableRow key={task.id}>
-                  <TableCell className={`font-medium
-                    ${task.isSupport ? "border-l-2 border-primary" : ""}
-                    ${task.isMeeting ? "border-l-2 border-white" : ""}`}>
-                        {task.title}
+                  <TableCell className={`font-medium ${
+                    task.isSupport ? "border-l-2 border-primary" :
+                    task.isMeeting ? "border-l-2 border-secondary" : ""
+                    }`}>
+                    {task.title}
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      variant={
-                        task.status === "COMPLETED" ? "default" :
-                        task.status === "IN_PROGRESS" ? "secondary" :
-                        task.status === "WAITING" ? "outline" : "destructive"
-                      }
-                    >
-                      {task.status === "TODO" ? "À faire" :
-                       task.status === "IN_PROGRESS" ? "En cours" :
-                       task.status === "WAITING" ? "En attente" : "Terminé"}
-                    </Badge>
+                    {task.isMeeting ? ("-") : task.status ? (
+                      <Badge
+                        variant={
+                          task.status === "COMPLETED" ? "default" :
+                          task.status === "IN_PROGRESS" ? "secondary" :
+                          task.status === "WAITING" ? "outline" : "destructive"
+                        }
+                      >
+                        {task.status === "TODO" ? "À faire" :
+                         task.status === "IN_PROGRESS" ? "En cours" :
+                         task.status === "WAITING" ? "En attente" : "Terminé"}
+                      </Badge>
+                    ) : null}
                   </TableCell>
-                <TableCell>
-                {task.timeframe === "TODAY" ? "Aujourd'hui" :
-                    task.timeframe === "THIS_WEEK" ? "Cette semaine" :
-                    task.timeframe === "UPCOMING" ? "À venir" : "Backlog"}
-                </TableCell>
                   <TableCell>
-                    <Badge
-                      variant={
-                        task.priority === "LOW" ? "outline" :
-                        task.priority === "MEDIUM" ? "secondary" :
-                        task.priority === "HIGH" ? "default" : "destructive"
-                      }
+                    {task.isMeeting ? ("-") : task.timeframe ? (
+                      task.timeframe === "TODAY" ? "Aujourd'hui" :
+                      task.timeframe === "THIS_WEEK" ? "Cette semaine" :
+                      task.timeframe === "UPCOMING" ? "À venir" : "Backlog"
+                    ) : null}
+                  </TableCell>
+                  <TableCell>
+                    {task.isMeeting ? ("-") : task.priority ? (
+                      <Badge
+                        variant={
+                          task.priority === "LOW" ? "outline" :
+                          task.priority === "MEDIUM" ? "secondary" :
+                          task.priority === "HIGH" ? "default" : "destructive"
+                        }
                     >
                       {task.priority === "LOW" ? "Basse" :
                        task.priority === "MEDIUM" ? "Moyenne" :
                        task.priority === "HIGH" ? "Haute" : "Urgente"}
                     </Badge>
+                    ) : null}
                   </TableCell>
                   {/* <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell> */}
                   <TableCell className="text-right">

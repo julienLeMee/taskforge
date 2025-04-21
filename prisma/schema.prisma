@@ -64,11 +64,11 @@ model Task {
   id            String    @id @default(cuid())
   title         String
   description   String?   @db.Text
-  status        TaskStatus @default(TODO)
+  status        TaskStatus? @default(TODO)
   priority      Priority   @default(MEDIUM)
 
   // Organisation temporelle
-  timeframe     Timeframe  @default(UPCOMING)
+  timeframe     Timeframe?  @default(UPCOMING)
   dueDate       DateTime?
 
   // Support
