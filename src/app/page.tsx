@@ -18,12 +18,12 @@ export default async function Home() {
           Organisez efficacement vos projets.
         </p>
         {/* TODO: Add a login button and a signup button */}
-        <div className="flex flex-col gap-4">
+        <div className="flex gap-4">
           <Link href="/auth/signin">
             <Button>Login</Button>
           </Link>
           <Link href="/auth/signup">
-            <Button>Signup</Button>
+            <Button variant="outline">Signup</Button>
           </Link>
           </div>
         </div>
