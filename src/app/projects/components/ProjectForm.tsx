@@ -141,11 +141,12 @@ export function ProjectForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="deployment">Déploiement</Label>
-            <Input
+            <Textarea
               id="deployment"
               value={project.deployment || ""}
               onChange={(e) => handleUpdate({ deployment: e.target.value })}
-              placeholder="URL de déploiement"
+              placeholder="Informations de déploiement (URL, instructions, etc.)"
+              className="min-h-[100px]"
             />
           </div>
           <div className="space-y-2">

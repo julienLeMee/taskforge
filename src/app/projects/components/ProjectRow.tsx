@@ -7,17 +7,19 @@ import { Project } from "../types";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Trash, Ellipsis } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
+import { Checkbox } from "@/components/ui/checkbox";
 interface ProjectRowProps {
   project: Project;
-  onStatusChange: (id: string, newStatus: string) => void;
+  onStatusChange: (projectId: string, newStatus: string) => void;
+  onNextStepToggle: (projectId: string, stepText: string) => void;
   onUpdateProject: (project: Project) => void;
   onDeleteProject: (id: string) => void;
 }
 
 export function ProjectRow({
   project,
-//   onStatusChange,
+  onStatusChange,
+  onNextStepToggle,
   onUpdateProject,
   onDeleteProject,
 }: ProjectRowProps) {
@@ -25,8 +27,31 @@ export function ProjectRow({
     <TableRow>
       <TableCell>{project.title}</TableCell>
       <TableCell>
-        {/* badge */}
-        <Badge variant="outline">{project.status}</Badge>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Badge
+              className="cursor-pointer hover:opacity-80"
+              variant={
+                project.status === "En cours" ? "default" :
+                project.status === "En pause" ? "secondary" :
+                project.status === "Terminé" ? "destructive" : "primary"
+              }
+            >
+              {project.status}
+            </Badge>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => onStatusChange(project.id, "En cours")}>
+              En cours
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onStatusChange(project.id, "En pause")}>
+              En pause
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onStatusChange(project.id, "Terminé")}>
+              Terminé
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </TableCell>
       <TableCell>
         {project.nextSteps && project.nextSteps.length > 0 ? (
@@ -34,11 +59,16 @@ export function ProjectRow({
             {project.nextSteps.map((step, index) => (
               <div
                 key={index}
-                className={`text-sm ${
+                className={`flex items-center gap-2 text-sm ${
                   step.completed ? "line-through text-muted-foreground" : ""
                 }`}
               >
-                • {step.text}
+                <Checkbox
+                  checked={step.completed}
+                  onCheckedChange={() => onNextStepToggle(project.id, step.text)}
+                  className="h-4 w-4"
+                />
+                <span>{step.text}</span>
               </div>
             ))}
           </div>
@@ -46,9 +76,12 @@ export function ProjectRow({
           "-"
         )}
       </TableCell>
-      <TableCell>{project.deployment || "-"}</TableCell>
+      <TableCell>
+        <div className="whitespace-pre-wrap max-h-[100px] overflow-y-auto">
+          {project.deployment || "-"}
+        </div>
+      </TableCell>
       <TableCell className="text-right space-x-2">
-        {/* dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon">

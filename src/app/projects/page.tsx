@@ -201,6 +201,41 @@ export default function ProjectsPage() {
     }
   };
 
+  const handleNextStepToggle = async (projectId: string, stepText: string) => {
+    try {
+      const project = projects.find(p => p.id === projectId);
+      if (!project) return;
+
+      const updatedNextSteps = project.nextSteps.map(step =>
+        step.text === stepText ? { ...step, completed: !step.completed } : step
+      );
+
+      const response = await fetch(`/api/projects/${projectId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: project.title,
+          description: project.description,
+          status: project.status,
+          nextSteps: updatedNextSteps,
+          deployment: project.deployment
+        }),
+      });
+
+      if (!response.ok) throw new Error("Erreur lors de la mise à jour de l'étape");
+
+      const updatedProject = await response.json();
+      setProjects(projects.map(p => p.id === projectId ? updatedProject : p));
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la mise à jour de l'étape",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="space-y-6 p-2 pt-4 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -256,6 +291,7 @@ export default function ProjectsPage() {
                   key={project.id}
                   project={project}
                   onStatusChange={handleStatusUpdate}
+                  onNextStepToggle={handleNextStepToggle}
                   onUpdateProject={handleUpdateProject}
                   onDeleteProject={handleDeleteProject}
                 />
