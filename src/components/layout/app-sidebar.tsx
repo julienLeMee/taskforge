@@ -28,7 +28,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useSession } from "next-auth/react"
-import { ThemeToggle } from "@/components/theme-toggle"
 import { UserNavClient } from "@/components/layout/user-nav-client"
 // Menu items
 const items = [
