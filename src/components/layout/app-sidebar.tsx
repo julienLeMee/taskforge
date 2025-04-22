@@ -29,7 +29,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useSession } from "next-auth/react"
 import { ThemeToggle } from "@/components/theme-toggle"
-
+import { UserNavClient } from "@/components/layout/user-nav-client"
 // Menu items
 const items = [
 //   {
@@ -146,7 +146,7 @@ export function AppSidebar() {
 
             {session?.user && (
               <div className="flex items-center justify-end p-4 mt-auto">
-                <ThemeToggle />
+                <UserNavClient />
               </div>
             )}
           </div>
@@ -174,7 +174,7 @@ export function AppSidebar() {
 
             {session?.user && (
               <div className="flex items-center justify-end p-2 mt-auto">
-                <ThemeToggle />
+                <UserNavClient />
               </div>
             )}
           </SidebarContent>

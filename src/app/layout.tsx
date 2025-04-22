@@ -8,7 +8,7 @@ import { SessionProvider } from 'next-auth/react';
 import { auth } from '../../auth';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { UserNavClient } from '@/components/layout/user-nav-client';
+import { ThemeToggle } from '@/components/theme-toggle';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -43,7 +43,7 @@ export default async function RootLayout({
                   <AppSidebar />
                   <main className="flex-1 p-4">
                     <div className="flex items-center justify-end">
-                      <UserNavClient />
+                      <ThemeToggle />
                     </div>
                     {children}
                   </main>
