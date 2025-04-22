@@ -3,7 +3,7 @@
 import {
 //   LayoutDashboard,
   FolderKanban,
-  CheckSquare,
+//   CheckSquare,
 //   Calendar,
 //   Settings,
 //   Users,
@@ -46,11 +46,11 @@ const items = [
     href: "/projects",
     icon: FolderKanban,
   },
-  {
-    title: "Tâches",
-    href: "/tasks",
-    icon: CheckSquare,
-  },
+//   {
+//     title: "Tâches",
+//     href: "/tasks",
+//     icon: CheckSquare,
+//   },
 //   {
 //     title: "Calendrier",
 //     href: "/calendar",
