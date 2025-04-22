@@ -32,9 +32,9 @@ export function ProjectRow({
             <Badge
               className="cursor-pointer hover:opacity-80"
               variant={
-                project.status === "En cours" ? "default" :
+                project.status === "En cours" ? "primary" :
                 project.status === "En pause" ? "secondary" :
-                project.status === "Terminé" ? "destructive" : "primary"
+                project.status === "Terminé" ? "outline" : "default"
               }
             >
               {project.status}
@@ -42,13 +42,13 @@ export function ProjectRow({
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem onClick={() => onStatusChange(project.id, "En cours")}>
-              En cours
+              <Badge variant="primary">En cours</Badge>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onStatusChange(project.id, "En pause")}>
-              En pause
+              <Badge variant="secondary">En pause</Badge>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onStatusChange(project.id, "Terminé")}>
-              Terminé
+              <Badge variant="outline">Terminé</Badge>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
