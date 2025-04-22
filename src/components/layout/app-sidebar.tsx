@@ -1,7 +1,7 @@
 "use client"
 
 import {
-  LayoutDashboard,
+//   LayoutDashboard,
   FolderKanban,
   CheckSquare,
 //   Calendar,
@@ -32,11 +32,11 @@ import { ThemeToggle } from "@/components/theme-toggle"
 
 // Menu items
 const items = [
-  {
-    title: "Tableau de bord",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
+//   {
+//     title: "Tableau de bord",
+//     href: "/dashboard",
+//     icon: LayoutDashboard,
+//   },
   {
     title: "Priorités",
     href: "/priorities",
