@@ -42,7 +42,7 @@ export async function GET() {
 // Schéma de validation pour la création d'une tâche
 const createTaskSchema = z.object({
     title: z.string().min(1, "Le titre est requis"),
-    description: z.string().optional(),
+    description: z.string().nullable().optional(),
     status: z.enum(["TODO", "IN_PROGRESS", "WAITING", "COMPLETED"]).optional(),
     priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
     timeframe: z.enum(["TODAY", "THIS_WEEK", "UPCOMING", "BACKLOG"]).optional(),
