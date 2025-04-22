@@ -1,47 +1,45 @@
 import { prisma } from "@/lib/db";
-import { auth } from "../../../../../auth";
-import { NextResponse } from "next/server";
+import { auth } from "#/auth";
+import { NextRequest, NextResponse } from "next/server";
 import { projectSchema } from "@/lib/validations/project";
 
 // GET - Récupérer un projet par son ID
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ message: "Non autorisé" }, { status: 401 });
+    if (!session?.user) {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
     const project = await prisma.project.findUnique({
       where: {
-        id: params.id,
-        userId: session.user.id
-      }
+        id,
+        userId: session.user.id,
+      },
     });
 
     if (!project) {
-      return NextResponse.json({ message: "Projet non trouvé" }, { status: 404 });
+      return NextResponse.json({ error: "Projet non trouvé" }, { status: 404 });
     }
 
     return NextResponse.json(project);
   } catch (error) {
-    console.error("Erreur lors de la récupération du projet:", error);
-    return NextResponse.json(
-      { message: "Une erreur est survenue" },
-      { status: 500 }
-    );
+    console.error("[PROJECT_GET]", error);
+    return NextResponse.json({ error: "Erreur interne du serveur" }, { status: 500 });
   }
 }
 
 // PATCH - Mettre à jour un projet
 export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -83,7 +81,7 @@ export async function PATCH(
     // Vérifier si le projet existe et appartient à l'utilisateur
     const existingProject = await prisma.project.findUnique({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id
       }
     });
@@ -93,7 +91,7 @@ export async function PATCH(
     }
 
     const updatedProject = await prisma.project.update({
-      where: { id: params.id },
+      where: { id },
       data: json
     });
 
@@ -109,10 +107,11 @@ export async function PATCH(
 
 // DELETE - Supprimer un projet
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -122,7 +121,7 @@ export async function DELETE(
     // Vérifier si le projet existe et appartient à l'utilisateur
     const existingProject = await prisma.project.findUnique({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id
       }
     });
@@ -132,7 +131,7 @@ export async function DELETE(
     }
 
     await prisma.project.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     return NextResponse.json({ message: "Projet supprimé avec succès" });

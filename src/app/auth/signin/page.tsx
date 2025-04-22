@@ -33,6 +33,7 @@ export default function SignIn() {
 
       router.push("/dashboard");
     } catch (error) {
+      console.error("Erreur lors de la connexion:", error);
       setError("Une erreur est survenue");
       setIsLoading(false);
     }

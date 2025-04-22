@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "#/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
-export const GET = auth(async (req) => {
+export async function GET() {
   try {
     const session = await auth();
     console.log("Session:", session);
@@ -27,20 +28,17 @@ export const GET = auth(async (req) => {
     console.error("[PROJECTS_GET] Detailed error:", error);
     return NextResponse.json({ error: "Erreur interne du serveur" }, { status: 500 });
   }
-});
+}
 
-export const POST = auth(async (req) => {
+export async function POST(request: NextRequest) {
   try {
     const session = await auth();
-    console.log("Session:", session);
 
-    if (!session?.user) {
-      console.log("No session or user found");
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
-    const body = await req.json();
-    console.log("Request body:", body);
+    const body = await request.json();
     const { title, description, status, nextSteps, deployment } = body;
 
     if (!title) {
@@ -49,11 +47,11 @@ export const POST = auth(async (req) => {
 
     const project = await prisma.project.create({
       data: {
-        title,
-        description,
-        status: status || "En cours",
-        nextSteps,
-        deployment,
+        title: title as string,
+        description: description as string | null,
+        status: (status || "En cours") as string,
+        nextSteps: nextSteps as Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue | undefined,
+        deployment: deployment as string | null,
         userId: session.user.id,
       },
     });
@@ -63,4 +61,4 @@ export const POST = auth(async (req) => {
     console.error("[PROJECTS_POST] Detailed error:", error);
     return NextResponse.json({ error: "Erreur interne du serveur" }, { status: 500 });
   }
-});
+}

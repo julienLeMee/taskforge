@@ -1,5 +1,5 @@
 // src/app/api/tasks/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/../../auth";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
@@ -53,7 +53,7 @@ const createTaskSchema = z.object({
   });
 
   // POST /api/tasks - Créer une nouvelle tâche
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     try {
       const session = await auth();
 

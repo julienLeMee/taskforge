@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/../../auth";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
@@ -18,8 +18,12 @@ const updateTaskSchema = z.object({
   isDone: z.boolean().optional(),
 });
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -37,7 +41,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 
     const task = await prisma.task.update({
-      where: { id: params.id, userId: session.user.id },
+      where: { id, userId: session.user.id },
       data: validationResult.data,
     });
 
@@ -52,10 +56,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -65,7 +70,7 @@ export async function DELETE(
     // Vérifier que la tâche existe et appartient à l'utilisateur
     const task = await prisma.task.findUnique({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
     });
@@ -77,7 +82,7 @@ export async function DELETE(
     // Supprimer la tâche
     await prisma.task.delete({
       where: {
-        id: params.id,
+        id,
       },
     });
 
