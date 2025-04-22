@@ -157,7 +157,7 @@ export function AppSidebar() {
       <SidebarProvider>
         <Sidebar className="hidden border-r lg:block" collapsible="icon">
           <SidebarContent>
-            <div className="flex items-center justify-between p-2">
+            <div className="flex items-center justify-between pt-4 p-2">
               <Link href="/" className="flex items-center">
                 <span className="text-xl font-bold group-data-[collapsible=icon]:hidden pl-2">
                   Task<span className="text-primary">Forge</span>
