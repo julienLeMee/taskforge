@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 
 const themes = [
   { id: 'default', name: 'Default' },
-  { id: 'theme-tangerine-light', name: 'Tangerine Light' },
-  { id: 'theme-tangerine-dark', name: 'Tangerine Dark' },
+  { id: 'theme-blue', name: 'Blue' },
+  { id: 'theme-purple', name: 'Purple' },
+  { id: 'theme-green', name: 'Green' },
 ];
 
 export function ThemeSelector() {
