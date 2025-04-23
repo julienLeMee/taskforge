@@ -9,7 +9,7 @@ import {
 //   Users,
   Menu,
   ArrowUpDown,
-  User,
+  Settings,
 } from "lucide-react"
 import {
   Sidebar,
@@ -106,8 +106,8 @@ function NavigationMenu({ pathname }: { pathname: string }) {
       })}
     <SidebarMenuButton asChild tooltip="Mon compte">
         <Link href="/account">
-            <User className="h-4 w-4" />
-            <span>Mon compte</span>
+            <Settings className="h-4 w-4" />
+            <span>Réglages</span>
         </Link>
     </SidebarMenuButton>
     </SidebarMenu>

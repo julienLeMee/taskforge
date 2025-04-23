@@ -2,6 +2,7 @@ import { auth } from "../../../auth";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PasswordChangeForm } from "@/components/settings/PasswordChangeForm";
+import { ThemeSelector } from '../components/ThemeSelector';
 
 export default async function AccountPage() {
   const session = await auth();
@@ -42,6 +43,10 @@ export default async function AccountPage() {
         </Card>
 
         <PasswordChangeForm />
+      </div>
+
+      <div className="max-w-md">
+        <ThemeSelector />
       </div>
     </div>
   );
