@@ -9,6 +9,7 @@ import {
 //   Users,
   Menu,
   ArrowUpDown,
+  User,
 } from "lucide-react"
 import {
   Sidebar,
@@ -21,6 +22,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
+  SidebarGroupLabel,
 } from "@/components/ui/sidebar"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
@@ -77,6 +79,9 @@ function NavigationMenu({ pathname }: { pathname: string }) {
 
   return (
     <SidebarMenu>
+        <SidebarGroupLabel>
+            <span>Organisation</span>
+        </SidebarGroupLabel>
       {items.map((item) => {
         const isActive = pathname === item.href
         return (
@@ -88,7 +93,7 @@ function NavigationMenu({ pathname }: { pathname: string }) {
               <Link
                 href={item.href}
                 className={cn(
-                  "flex items-center space-x-3",
+                  "flex items-center",
                   isActive && "text-primary"
                 )}
               >
@@ -99,6 +104,12 @@ function NavigationMenu({ pathname }: { pathname: string }) {
           </SidebarMenuItem>
         )
       })}
+    <SidebarMenuButton asChild tooltip="Mon compte">
+        <Link href="/account">
+            <User className="h-4 w-4" />
+            <span>Mon compte</span>
+        </Link>
+    </SidebarMenuButton>
     </SidebarMenu>
   )
 }
