@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Pencil, Trash2, Ellipsis } from "lucide-react";
+import { Pencil, Trash2, Ellipsis, Video } from "lucide-react";
 import { Task } from "../types";
 import { TableCell, TableRow } from "@/components/ui/table";
 
@@ -44,7 +44,12 @@ export function TaskRow({
       </TableCell>
       <TableCell className={`font-medium ${task.isDone ? "line-through" : ""}`}>
         <span onClick={() => onUpdateTask(task.id, task)} className="cursor-pointer hover:underline">
-          {task.title}
+        {task.isMeeting ? (
+          <div className="flex items-center gap-2">
+            <Video className="w-4 h-4" />
+            {task.title}
+          </div>
+        ) : task.title}
         </span>
       </TableCell>
       <TableCell>
