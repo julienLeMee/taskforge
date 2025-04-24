@@ -140,9 +140,9 @@ export default function TasksPage() {
       id,
       title: task.title,
       description: task.description,
-      status: task.status,
+      status: task.status || undefined,
       priority: task.priority,
-      timeframe: task.timeframe,
+      timeframe: task.timeframe || undefined,
       isSupport: task.isSupport,
       isMeeting: task.isMeeting,
       isDone: task.isDone,
@@ -156,16 +156,25 @@ export default function TasksPage() {
     if (!taskToUpdate) return;
 
     try {
+      // Ne garder que les champs qui ont une valeur (même null)
+      const updateData = Object.entries(taskToUpdate).reduce((acc, [key, value]) => {
+        if (key !== 'id' && (value !== undefined)) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Partial<TaskUpdateData>);
+
       const response = await fetch(`/api/tasks/${taskToUpdate.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(taskToUpdate),
+        body: JSON.stringify(updateData),
       });
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la mise à jour de la tâche");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erreur lors de la mise à jour de la tâche");
       }
 
       const updatedTask = await response.json();
@@ -181,7 +190,7 @@ export default function TasksPage() {
       console.error("Erreur:", error);
       toast({
         title: "Erreur",
-        description: "Erreur lors de la mise à jour de la tâche",
+        description: error instanceof Error ? error.message : "Erreur lors de la mise à jour de la tâche",
         variant: "destructive",
       });
     }

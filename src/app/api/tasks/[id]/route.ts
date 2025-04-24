@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 // Schéma de validation pour la mise à jour d'une tâche
 const updateTaskSchema = z.object({
   title: z.string().min(1, "Le titre est requis").optional(),
-  description: z.string().optional(),
+  description: z.string().nullable().optional(),
   status: z.enum(["TODO", "IN_PROGRESS", "WAITING", "COMPLETED"]).optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
   timeframe: z.enum(["TODAY", "THIS_WEEK", "UPCOMING"]).optional(),
