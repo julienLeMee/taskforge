@@ -290,11 +290,11 @@ export default function ProjectsPage() {
           <ProjectList
             projects={projects}
             onReorder={handleReorder}
-            onStatusChange={handleStatusUpdate}
-            onNextStepToggle={handleNextStepToggle}
-            onUpdateProject={handleUpdateProject}
-            onDeleteProject={handleDeleteProject}
-          />
+                  onStatusChange={handleStatusUpdate}
+                  onNextStepToggle={handleNextStepToggle}
+                  onUpdateProject={handleUpdateProject}
+                  onDeleteProject={handleDeleteProject}
+                />
         </div>
       )}
     </div>

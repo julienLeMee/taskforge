@@ -373,13 +373,13 @@ export default function TasksPage() {
           <TaskList
             tasks={tasks}
             onReorder={handleReorder}
-            onStatusChange={handleStatusUpdate}
-            onPriorityChange={handlePriorityUpdate}
-            onTimeframeChange={handleTimeframeUpdate}
-            onTaskDoneChange={handleTaskDoneChange}
-            onUpdateTask={handleUpdateTask}
-            onDeleteTask={handleDeleteTask}
-          />
+                  onStatusChange={handleStatusUpdate}
+                  onPriorityChange={handlePriorityUpdate}
+                  onTimeframeChange={handleTimeframeUpdate}
+                  onTaskDoneChange={handleTaskDoneChange}
+                  onUpdateTask={handleUpdateTask}
+                  onDeleteTask={handleDeleteTask}
+                />
         </div>
       )}
     </div>

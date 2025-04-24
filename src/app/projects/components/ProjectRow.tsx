@@ -17,6 +17,7 @@ interface ProjectRowProps {
   onNextStepToggle: (projectId: string, stepText: string) => void;
   onUpdateProject: (project: Project) => void;
   onDeleteProject: (id: string) => void;
+  showDeployment?: boolean;
 }
 
 export function ProjectRow({
@@ -25,6 +26,7 @@ export function ProjectRow({
   onNextStepToggle,
   onUpdateProject,
   onDeleteProject,
+  showDeployment = true,
 }: ProjectRowProps) {
   const {
     attributes,
@@ -103,11 +105,13 @@ export function ProjectRow({
           "-"
         )}
       </TableCell>
-      <TableCell>
-        <div className="whitespace-pre-wrap max-h-[100px] overflow-y-auto">
-          {project.deployment || "-"}
-        </div>
-      </TableCell>
+      {showDeployment && (
+        <TableCell>
+          <div className="whitespace-pre-wrap max-h-[100px] overflow-y-auto">
+            {project.deployment || "-"}
+          </div>
+        </TableCell>
+      )}
       <TableCell className="text-right space-x-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -51,7 +51,7 @@ export function TaskRow({
 
   return (
     <TableRow ref={setNodeRef} style={style} className={`${task.isDone ? "bg-muted" : ""} ${isDragging ? "z-50" : ""}`}>
-      <TableCell className={`${
+        <TableCell className={`${
         task.isSupport ? "border-l-2 border-primary" :
         task.isMeeting ? "border-l-2 dark:border-secondary border-foreground" : ""
       }`}>
@@ -59,11 +59,11 @@ export function TaskRow({
           <div {...attributes} {...listeners} className="cursor-grab hover:cursor-grabbing">
             <GripVertical className="h-4 w-4 text-muted-foreground" />
           </div>
-          <Checkbox
-            id={task.id}
-            checked={task.isDone}
-            onCheckedChange={(checked) => onTaskDoneChange(task.id, checked as boolean)}
-          />
+        <Checkbox
+          id={task.id}
+          checked={task.isDone}
+          onCheckedChange={(checked) => onTaskDoneChange(task.id, checked as boolean)}
+        />
         </div>
       </TableCell>
       <TableCell className={`font-medium ${task.isDone ? "line-through" : ""}`}>

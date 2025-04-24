@@ -108,72 +108,72 @@ export function ProjectForm({
         <form onSubmit={onSubmit} className="space-y-6">
           <DialogHeader className="pb-4">
             <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
-          </DialogHeader>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
 
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">Titre</Label>
-              <Input
-                id="title"
-                value={project.title}
+          <div className="space-y-2">
+            <Label htmlFor="title">Titre</Label>
+            <Input
+              id="title"
+              value={project.title}
                 onChange={(e) => handleProjectUpdate({ title: e.target.value })}
-                placeholder="Nom du projet"
-              />
-            </div>
+              placeholder="Nom du projet"
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={project.description || ""}
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={project.description || ""}
                 onChange={(e) => handleProjectUpdate({ description: e.target.value })}
-                placeholder="Description du projet"
-              />
-            </div>
+              placeholder="Description du projet"
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="status">Statut</Label>
-              <Select
-                value={project.status}
+          <div className="space-y-2">
+            <Label htmlFor="status">Statut</Label>
+            <Select
+              value={project.status}
                 onValueChange={(value) => handleProjectUpdate({ status: value })}
-              >
-                <SelectTrigger>
+            >
+              <SelectTrigger>
                   <SelectValue placeholder="Sélectionnez un statut" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="En cours">En cours</SelectItem>
-                  <SelectItem value="En pause">En pause</SelectItem>
-                  <SelectItem value="Terminé">Terminé</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="En cours">En cours</SelectItem>
+                <SelectItem value="En pause">En pause</SelectItem>
+                <SelectItem value="Terminé">Terminé</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="deployment">Déploiement</Label>
-              <Textarea
-                id="deployment"
-                value={project.deployment || ""}
+          <div className="space-y-2">
+            <Label htmlFor="deployment">Déploiement</Label>
+            <Textarea
+              id="deployment"
+              value={project.deployment || ""}
                 onChange={(e) => handleProjectUpdate({ deployment: e.target.value })}
                 placeholder="Instructions de déploiement"
-              />
-            </div>
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label>Prochaines étapes</Label>
-              <div className="flex gap-2">
-                <Input
-                  value={newStep}
-                  onChange={(e) => setNewStep(e.target.value)}
+          <div className="space-y-2">
+            <Label>Prochaines étapes</Label>
+            <div className="flex gap-2">
+              <Input
+                value={newStep}
+                onChange={(e) => setNewStep(e.target.value)}
                   placeholder="Nouvelle étape"
                   onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addNextStep())}
-                />
+              />
                 <Button type="button" onClick={addNextStep} size="icon">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
 
-              <div className="space-y-2 mt-2">
+            <div className="space-y-2 mt-2">
                 <DndContext
                   collisionDetection={closestCenter}
                   onDragEnd={handleDragEnd}
@@ -194,7 +194,7 @@ export function ProjectForm({
                     ))}
                   </SortableContext>
                 </DndContext>
-              </div>
+                </div>
             </div>
           </div>
 

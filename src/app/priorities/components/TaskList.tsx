@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { Task } from '../types';
