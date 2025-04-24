@@ -156,13 +156,10 @@ export default function TasksPage() {
     if (!taskToUpdate) return;
 
     try {
-      // Ne garder que les champs qui ont une valeur (même null)
-      const updateData = Object.entries(taskToUpdate).reduce((acc, [key, value]) => {
-        if (key !== 'id' && (value !== undefined)) {
-          acc[key] = value;
-        }
-        return acc;
-      }, {} as Partial<TaskUpdateData>);
+      const updateData = Object.fromEntries(
+        Object.entries(taskToUpdate)
+          .filter(([key, value]) => key !== 'id' && value !== undefined)
+      ) as Partial<TaskUpdateData>;
 
       const response = await fetch(`/api/tasks/${taskToUpdate.id}`, {
         method: "PUT",
