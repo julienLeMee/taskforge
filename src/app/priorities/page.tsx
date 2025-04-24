@@ -3,16 +3,9 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TaskForm } from "./components/TaskForm";
-import { TaskRow } from "./components/TaskRow";
+import { TaskList } from "./components/TaskList";
 import { Task, TaskFormData, TaskUpdateData } from "./types";
 
 export default function TasksPage() {
@@ -306,6 +299,25 @@ export default function TasksPage() {
     }
   };
 
+  const handleReorder = async (newTasks: Task[]) => {
+    setTasks(newTasks);
+    try {
+      // Optionally, you can save the new order to your backend
+      // await fetch("/api/tasks/reorder", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ tasks: newTasks }),
+      // });
+    } catch (error) {
+      console.error("Error saving task order:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de sauvegarder l'ordre des tâches",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="space-y-6 p-2 pt-4 max-w-4xl mx-auto">
       <div className="flex justify-between items-start mb-6">
@@ -358,32 +370,16 @@ export default function TasksPage() {
         </div>
       ) : (
         <div className="border rounded-md">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead></TableHead>
-                <TableHead>Titre</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead>Échéance</TableHead>
-                <TableHead>Priorité</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tasks.map((task) => (
-                <TaskRow
-                  key={task.id}
-                  task={task}
-                  onStatusChange={handleStatusUpdate}
-                  onPriorityChange={handlePriorityUpdate}
-                  onTimeframeChange={handleTimeframeUpdate}
-                  onTaskDoneChange={handleTaskDoneChange}
-                  onUpdateTask={handleUpdateTask}
-                  onDeleteTask={handleDeleteTask}
-                />
-              ))}
-            </TableBody>
-          </Table>
+          <TaskList
+            tasks={tasks}
+            onReorder={handleReorder}
+            onStatusChange={handleStatusUpdate}
+            onPriorityChange={handlePriorityUpdate}
+            onTimeframeChange={handleTimeframeUpdate}
+            onTaskDoneChange={handleTaskDoneChange}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+          />
         </div>
       )}
     </div>

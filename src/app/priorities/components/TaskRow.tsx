@@ -7,9 +7,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Pencil, Trash2, Ellipsis, Video } from "lucide-react";
+import { Pencil, Trash2, Ellipsis, Video, GripVertical } from "lucide-react";
 import { Task } from "../types";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface TaskRowProps {
   task: Task;
@@ -30,17 +32,39 @@ export function TaskRow({
   onUpdateTask,
   onDeleteTask,
 }: TaskRowProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: task.id
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   return (
-    <TableRow className={`${task.isDone ? "bg-muted" : ""}`}>
+    <TableRow ref={setNodeRef} style={style} className={`${task.isDone ? "bg-muted" : ""} ${isDragging ? "z-50" : ""}`}>
       <TableCell className={`${
         task.isSupport ? "border-l-2 border-primary" :
         task.isMeeting ? "border-l-2 dark:border-secondary border-foreground" : ""
       }`}>
-        <Checkbox
-          id={task.id}
-          checked={task.isDone}
-          onCheckedChange={(checked) => onTaskDoneChange(task.id, checked as boolean)}
-        />
+        <div className="flex items-center gap-2">
+          <div {...attributes} {...listeners} className="cursor-grab hover:cursor-grabbing">
+            <GripVertical className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <Checkbox
+            id={task.id}
+            checked={task.isDone}
+            onCheckedChange={(checked) => onTaskDoneChange(task.id, checked as boolean)}
+          />
+        </div>
       </TableCell>
       <TableCell className={`font-medium ${task.isDone ? "line-through" : ""}`}>
         <span onClick={() => onUpdateTask(task.id, task)} className="cursor-pointer hover:underline">
