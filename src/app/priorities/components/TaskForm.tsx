@@ -186,7 +186,7 @@ export function TaskForm({
                   <SelectValue placeholder={mode === "create" ? "À venir" : "Sélectionnez une échéance"} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="TODAY">Aujourd'hui</SelectItem>
+                  <SelectItem value="TODAY">Aujourd&apos;hui</SelectItem>
                   <SelectItem value="THIS_WEEK">Cette semaine</SelectItem>
                   <SelectItem value="UPCOMING">À venir</SelectItem>
                 </SelectContent>
