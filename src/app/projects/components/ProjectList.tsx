@@ -12,6 +12,7 @@ interface ProjectListProps {
   onNextStepToggle: (projectId: string, stepText: string) => void;
   onUpdateProject: (project: Project) => void;
   onDeleteProject: (id: string) => void;
+  showDeployment?: boolean;
 }
 
 export function ProjectList({
@@ -21,6 +22,7 @@ export function ProjectList({
   onNextStepToggle,
   onUpdateProject,
   onDeleteProject,
+  showDeployment = true,
 }: ProjectListProps) {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -41,7 +43,7 @@ export function ProjectList({
             <TableHead>Projet</TableHead>
             <TableHead>Statut</TableHead>
             <TableHead>Prochaines étapes</TableHead>
-            <TableHead>Déploiement</TableHead>
+            {showDeployment && <TableHead>Déploiement</TableHead>}
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -55,6 +57,7 @@ export function ProjectList({
                 onNextStepToggle={onNextStepToggle}
                 onUpdateProject={onUpdateProject}
                 onDeleteProject={onDeleteProject}
+                showDeployment={showDeployment}
               />
             ))}
           </SortableContext>

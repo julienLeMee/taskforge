@@ -109,7 +109,6 @@ enum Timeframe {
   TODAY
   THIS_WEEK
   UPCOMING
-  BACKLOG
 }
 
 // Modèle pour les projets

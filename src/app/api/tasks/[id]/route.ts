@@ -11,7 +11,7 @@ const updateTaskSchema = z.object({
   description: z.string().optional(),
   status: z.enum(["TODO", "IN_PROGRESS", "WAITING", "COMPLETED"]).optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
-  timeframe: z.enum(["TODAY", "THIS_WEEK", "UPCOMING", "BACKLOG"]).optional(),
+  timeframe: z.enum(["TODAY", "THIS_WEEK", "UPCOMING"]).optional(),
   dueDate: z.string().optional().nullable().transform(val => val ? new Date(val) : null),
   isSupport: z.boolean().optional(),
   isMeeting: z.boolean().optional(),

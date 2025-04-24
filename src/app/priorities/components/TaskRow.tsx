@@ -116,7 +116,7 @@ export function TaskRow({
                 {task.timeframe ? (
                   task.timeframe === "TODAY" ? "Aujourd'hui" :
                   task.timeframe === "THIS_WEEK" ? "Cette semaine" :
-                  task.timeframe === "UPCOMING" ? "À venir" : "Backlog"
+                  "À venir"
                 ) : "Choisir une échéance"}
               </span>
             </DropdownMenuTrigger>
@@ -129,9 +129,6 @@ export function TaskRow({
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onTimeframeChange(task.id, "UPCOMING")}>
                 À venir
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onTimeframeChange(task.id, "BACKLOG")}>
-                Backlog
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

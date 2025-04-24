@@ -15,6 +15,7 @@ export default function ProjectsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
   const [projectToUpdate, setProjectToUpdate] = useState<ProjectUpdateData | null>(null);
+  const [showDeployment, setShowDeployment] = useState(true);
 
   // État du formulaire
   const [newProject, setNewProject] = useState<ProjectFormData>({
@@ -24,6 +25,14 @@ export default function ProjectsPage() {
     nextSteps: [],
     deployment: null,
   });
+
+  // Charger la préférence d'affichage au chargement
+  useEffect(() => {
+    const savedPreference = localStorage.getItem("showDeploymentColumn");
+    if (savedPreference !== null) {
+      setShowDeployment(JSON.parse(savedPreference));
+    }
+  }, []);
 
   // Charger les projets au chargement de la page
   useEffect(() => {
@@ -253,26 +262,6 @@ export default function ProjectsPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Projets</h1>
         <Button onClick={() => setIsDialogOpen(true)}>Nouveau projet</Button>
-
-        <ProjectForm
-          isOpen={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-          onSubmit={handleCreateProject}
-          task={newProject}
-          setTask={(task: ProjectFormData) => setNewProject(task)}
-          mode="create"
-        />
-
-        {projectToUpdate && (
-          <ProjectForm
-            isOpen={isUpdateDialogOpen}
-            onOpenChange={setIsUpdateDialogOpen}
-            onSubmit={handleUpdateSubmit}
-            task={projectToUpdate}
-            setTask={(task: ProjectUpdateData) => setProjectToUpdate(task)}
-            mode="edit"
-          />
-        )}
       </div>
 
       {loading ? (
@@ -290,12 +279,33 @@ export default function ProjectsPage() {
           <ProjectList
             projects={projects}
             onReorder={handleReorder}
-                  onStatusChange={handleStatusUpdate}
-                  onNextStepToggle={handleNextStepToggle}
-                  onUpdateProject={handleUpdateProject}
-                  onDeleteProject={handleDeleteProject}
-                />
+            onStatusChange={handleStatusUpdate}
+            onNextStepToggle={handleNextStepToggle}
+            onUpdateProject={handleUpdateProject}
+            onDeleteProject={handleDeleteProject}
+            showDeployment={showDeployment}
+          />
         </div>
+      )}
+
+      <ProjectForm
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        task={newProject}
+        setTask={setNewProject}
+        onSubmit={handleCreateProject}
+        mode="create"
+      />
+
+      {projectToUpdate && (
+        <ProjectForm
+          isOpen={isUpdateDialogOpen}
+          onOpenChange={setIsUpdateDialogOpen}
+          task={projectToUpdate}
+          setTask={setProjectToUpdate}
+          onSubmit={handleUpdateSubmit}
+          mode="edit"
+        />
       )}
     </div>
   );

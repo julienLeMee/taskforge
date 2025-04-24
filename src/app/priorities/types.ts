@@ -4,7 +4,7 @@ export type Task = {
   description: string | null;
   status: "TODO" | "IN_PROGRESS" | "WAITING" | "COMPLETED" | undefined;
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-  timeframe: "TODAY" | "THIS_WEEK" | "UPCOMING" | "BACKLOG" | undefined;
+  timeframe: "TODAY" | "THIS_WEEK" | "UPCOMING" | undefined;
   isSupport: boolean;
   isMeeting: boolean;
   dueDate: string | null;
