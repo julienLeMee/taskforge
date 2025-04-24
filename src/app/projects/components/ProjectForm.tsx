@@ -18,7 +18,10 @@ import {
 } from "@/components/ui/select";
 import { ProjectFormData, ProjectUpdateData } from "../types";
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus } from "lucide-react";
+import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { NextStepItem } from './NextStepItem';
 
 interface BaseProjectFormProps {
   isOpen: boolean;
@@ -83,6 +86,20 @@ export function ProjectForm({
         i === index ? { ...step, completed: !step.completed } : step
       )
     });
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      handleProjectUpdate({
+        nextSteps: arrayMove(
+          project.nextSteps,
+          active.id as number,
+          over.id as number
+        )
+      });
+    }
   };
 
   return (
@@ -157,30 +174,26 @@ export function ProjectForm({
               </div>
 
               <div className="space-y-2 mt-2">
-                {project.nextSteps.map((step, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 bg-secondary/50 p-2 rounded-md"
+                <DndContext
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={project.nextSteps.map((_, index) => index)}
+                    strategy={verticalListSortingStrategy}
                   >
-                    <input
-                      type="checkbox"
-                      checked={step.completed}
-                      onChange={() => toggleNextStep(index)}
-                      className="h-4 w-4"
-                    />
-                    <span className={`flex-1 ${step.completed ? "line-through text-muted-foreground" : ""}`}>
-                      {step.text}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeNextStep(index)}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
+                    {project.nextSteps.map((step, index) => (
+                      <NextStepItem
+                        key={index}
+                        id={index}
+                        text={step.text}
+                        completed={step.completed}
+                        onToggle={() => toggleNextStep(index)}
+                        onRemove={() => removeNextStep(index)}
+                      />
+                    ))}
+                  </SortableContext>
+                </DndContext>
               </div>
             </div>
           </div>
