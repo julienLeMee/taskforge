@@ -5,9 +5,12 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Project } from "../types";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash, Ellipsis } from "lucide-react";
+import { Edit, Trash, Ellipsis, GripVertical } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 interface ProjectRowProps {
   project: Project;
   onStatusChange: (projectId: string, newStatus: string) => void;
@@ -23,9 +26,33 @@ export function ProjectRow({
   onUpdateProject,
   onDeleteProject,
 }: ProjectRowProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: project.id
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   return (
-    <TableRow>
-      <TableCell>{project.title}</TableCell>
+    <TableRow ref={setNodeRef} style={style} className={isDragging ? "z-50" : ""}>
+      <TableCell>
+        <div className="flex items-center gap-2">
+          <div {...attributes} {...listeners} className="cursor-grab hover:cursor-grabbing">
+            <GripVertical className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <span>{project.title}</span>
+        </div>
+      </TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
