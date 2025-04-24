@@ -46,19 +46,19 @@ export default async function AccountPage() {
                 <DeploymentToggle />
             </div>
 
+            {/* <div className="space-y-1">
+              <p className="text-sm font-medium">Couleur principale</p>
+            </div>
+            <div className="max-w-md">
+                <ThemeSelector />
+            </div> */}
+
 
           </CardContent>
         </Card>
 
         <PasswordChangeForm />
       </div>
-
-      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6"> */}
-
-        {/* <div className="max-w-md">
-            <ThemeSelector />
-        </div> */}
-      {/* </div> */}
 
     </div>
   );
