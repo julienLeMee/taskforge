@@ -7,11 +7,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Pencil, Trash2, Ellipsis, Video, GripVertical } from "lucide-react";
+import { Pencil, Trash2, Ellipsis, Video, GripVertical, Link2 } from "lucide-react";
 import { Task } from "../types";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
+// Fonction utilitaire pour formater les URLs
+const formatUrl = (url: string | null) => {
+  if (!url) return '';
+  try {
+    const urlObj = new URL(url);
+    return urlObj.href;
+  } catch {
+    // Si l'URL n'est pas valide, on ajoute https://
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      return `https://${url}`;
+    }
+    return url;
+  }
+};
 
 interface TaskRowProps {
   task: Task;
@@ -49,9 +64,17 @@ export function TaskRow({
     opacity: isDragging ? 0.5 : 1,
   };
 
+  const handleLinkClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const formattedUrl = task.link ? formatUrl(task.link) : '';
+    if (formattedUrl) {
+      window.open(formattedUrl, '_blank');
+    }
+  };
+
   return (
     <TableRow ref={setNodeRef} style={style} className={`${task.isDone ? "bg-muted" : ""} ${isDragging ? "z-50" : ""}`}>
-        <TableCell className={`${
+      <TableCell className={`${
         task.isSupport ? "border-l-2 border-primary" :
         task.isMeeting ? "border-l-2 dark:border-secondary border-foreground" : ""
       }`}>
@@ -59,22 +82,30 @@ export function TaskRow({
           <div {...attributes} {...listeners} className="cursor-grab hover:cursor-grabbing">
             <GripVertical className="h-4 w-4 text-muted-foreground" />
           </div>
-        <Checkbox
-          id={task.id}
-          checked={task.isDone}
-          onCheckedChange={(checked) => onTaskDoneChange(task.id, checked as boolean)}
-        />
+          <Checkbox
+            id={task.id}
+            checked={task.isDone}
+            onCheckedChange={(checked) => onTaskDoneChange(task.id, checked as boolean)}
+          />
         </div>
       </TableCell>
       <TableCell className={`font-medium ${task.isDone ? "line-through" : ""}`}>
-        <span onClick={() => onUpdateTask(task.id, task)} className="cursor-pointer hover:underline">
-        {task.isMeeting ? (
-          <div className="flex items-center gap-2">
-            <Video className="w-4 h-4" />
-            {task.title}
-          </div>
-        ) : task.title}
-        </span>
+        <div className="flex items-center gap-2">
+          <span onClick={() => onUpdateTask(task.id, task)} className="cursor-pointer hover:underline">
+            {task.isMeeting ? (
+              <div className="flex items-center gap-2">
+                <Video className="w-4 h-4" />
+                {task.title}
+              </div>
+            ) : task.title}
+          </span>
+          {task.link && (
+            <Link2
+              className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground"
+              onClick={handleLinkClick}
+            />
+          )}
+        </div>
       </TableCell>
       <TableCell>
         {task.isMeeting ? ("-") : task.status ? (
@@ -176,6 +207,20 @@ export function TaskRow({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
+            {task.link && (
+              <DropdownMenuItem
+                onClick={() => {
+                  const formattedUrl = formatUrl(task.link);
+                  if (formattedUrl) {
+                    window.open(formattedUrl, '_blank');
+                  }
+                }}
+                className="cursor-pointer"
+              >
+                <Link2 className="h-4 w-4" />
+                <span className="">Ouvrir le lien</span>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={() => onUpdateTask(task.id, task)} className="cursor-pointer">
               <Pencil className="h-4 w-4" />
               <span className="">Modifier</span>

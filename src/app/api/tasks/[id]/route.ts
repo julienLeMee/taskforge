@@ -16,6 +16,7 @@ const updateTaskSchema = z.object({
   isSupport: z.boolean().optional(),
   isMeeting: z.boolean().optional(),
   isDone: z.boolean().optional(),
+  link: z.string().nullable().optional(),
 });
 
 export async function PUT(

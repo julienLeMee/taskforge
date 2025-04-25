@@ -26,6 +26,7 @@ export default function TasksPage() {
     isSupport: false,
     isMeeting: false,
     isDone: false,
+    link: null,
   });
 
   // Charger les tâches au chargement de la page
@@ -81,6 +82,7 @@ export default function TasksPage() {
         isSupport: false,
         isMeeting: false,
         isDone: false,
+        link: null,
       });
       setIsDialogOpen(false);
       toast({
@@ -146,6 +148,7 @@ export default function TasksPage() {
       isSupport: task.isSupport,
       isMeeting: task.isMeeting,
       isDone: task.isDone,
+      link: task.link
     };
     setTaskToUpdate(formData);
     setIsUpdateDialogOpen(true);

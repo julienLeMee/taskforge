@@ -67,6 +67,7 @@ model Task {
   description   String?   @db.Text
   status        TaskStatus? @default(TODO)
   priority      Priority   @default(MEDIUM)
+  link          String?
 
   // Organisation temporelle
   timeframe     Timeframe?  @default(UPCOMING)

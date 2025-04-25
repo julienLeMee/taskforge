@@ -50,6 +50,7 @@ const createTaskSchema = z.object({
     isSupport: z.boolean().optional(),
     isMeeting: z.boolean().optional(),
     isDone: z.boolean().optional(),
+    link: z.string().nullable().optional(),
   });
 
   // POST /api/tasks - Créer une nouvelle tâche

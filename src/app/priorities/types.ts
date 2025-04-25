@@ -11,6 +11,7 @@ export type Task = {
   createdAt: string;
   updatedAt: string;
   isDone: boolean;
+  link: string | null;
 };
 
 export type TaskFormData = {
@@ -22,6 +23,7 @@ export type TaskFormData = {
   isSupport: boolean;
   isMeeting: boolean;
   isDone: boolean;
+  link: string | null;
 };
 
 export type TaskUpdateData = TaskFormData & {

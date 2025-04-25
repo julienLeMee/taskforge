@@ -54,6 +54,14 @@ export function TaskForm({
     : "Modifiez les informations de la priorité.";
   const buttonText = mode === "create" ? "Créer la tâche" : "Mettre à jour";
 
+  // Fonction pour nettoyer les URLs
+  const cleanUrl = (url: string) => {
+    const trimmedUrl = url.trim();
+    if (!trimmedUrl) return null;
+
+    return trimmedUrl;
+  };
+
   // Fonction pour convertir Task en TaskFormData si nécessaire
   const handleSetTask = (newValue: TaskFormData) => {
     if (mode === "create") {
@@ -119,6 +127,17 @@ export function TaskForm({
                 onChange={(e) => handleSetTask({ ...task, title: e.target.value })}
                 className="col-span-3"
                 required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="link" className="text-right">
+                Lien
+              </Label>
+              <Input
+                id="link"
+                value={task.link || ""}
+                onChange={(e) => handleSetTask({ ...task, link: cleanUrl(e.target.value) })}
+                className="col-span-3"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
