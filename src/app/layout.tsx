@@ -41,12 +41,18 @@ export default async function RootLayout({
               <SidebarProvider>
                 <div className="flex flex-1">
                   <AppSidebar />
-                  <main className="flex-1 p-4">
-                    <div className="flex items-center justify-end">
-                      <ThemeToggle />
-                    </div>
-                    {children}
-                  </main>
+                  {session ? (
+                    <main className="flex-1 p-4">
+                      <div className="flex items-center justify-end">
+                        <ThemeToggle />
+                      </div>
+                      {children}
+                    </main>
+                  ) : (
+                    <main className="flex-1">
+                      {children}
+                    </main>
+                  )}
                 </div>
               </SidebarProvider>
             </div>
