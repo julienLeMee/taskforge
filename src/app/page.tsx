@@ -27,7 +27,7 @@ export default async function Home() {
 
         <div className="container flex flex-col items-center justify-center gap-8 px-4 relative z-10">
           <h1 className="text-5xl font-extrabold tracking-tight text-center sm:text-[5rem]">
-            Task<span className="text-primary">Forge</span>
+            Task<span className="text-primary">Flow</span>
           </h1>
           <p className="lg:text-xl sm:text-base text-center max-w-2xl text-muted-foreground">
             Organisez efficacement vos projets.

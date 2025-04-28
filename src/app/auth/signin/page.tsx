@@ -45,7 +45,7 @@ export default function SignIn() {
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Connexion</h1>
           <p className="text-muted-foreground">
-            Connectez-vous à votre compte TaskForge
+            Connectez-vous à votre compte TaskFlow
           </p>
         </div>
 

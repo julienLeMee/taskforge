@@ -138,13 +138,13 @@ export function AppSidebar() {
         <SheetContent side="left" className="p-0 w-72">
           <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
           <SheetDescription className="sr-only">
-            Menu de navigation principal de l&apos;application TaskForge
+            Menu de navigation principal de l&apos;application TaskFlow
           </SheetDescription>
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between p-4">
               <Link href="/" className="flex items-center">
                 <span className="text-xl font-bold">
-                  Task<span className="text-primary">Forge</span>
+                  Task<span className="text-primary">Flow</span>
                 </span>
               </Link>
             </div>
@@ -170,7 +170,7 @@ export function AppSidebar() {
             <div className="flex items-center justify-between pt-4 p-2">
               <Link href="/" className="flex items-center">
                 <span className="text-xl font-bold group-data-[collapsible=icon]:hidden pl-2">
-                  Task<span className="text-primary">Forge</span>
+                  Task<span className="text-primary">Flow</span>
                 </span>
               </Link>
               <SidebarTrigger />

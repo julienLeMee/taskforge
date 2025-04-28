@@ -12,7 +12,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TaskForge - Gestion de Projets Personnels',
+  title: 'TaskFlow - Gestion de Projets Personnels',
   description: 'Application de gestion de projets et tâches personnelles',
 };
 

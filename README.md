@@ -1,6 +1,6 @@
-# TaskForge
+# TaskFlow
 
-TaskForge est une application full stack de gestion de projets personnels permettant à l'utilisateur de gérer efficacement ses projets et tâches. Ce projet a été conçu pour se perfectionner dans le développement full stack moderne.
+TaskFlow est une application full stack de gestion de projets personnels permettant à l'utilisateur de gérer efficacement ses projets et tâches. Ce projet a été conçu pour se perfectionner dans le développement full stack moderne.
 
 ## 🚀 Fonctionnalités
 
@@ -139,7 +139,7 @@ Chaque phase est divisée en sprints d'une semaine avec des user stories spécif
 
 ## 🤝 Contribution
 
-TaskForge est un projet personnel de développement de compétences. Les conseils et suggestions sont les bienvenus!
+TaskFlow est un projet personnel de développement de compétences. Les conseils et suggestions sont les bienvenus!
 
 ## 📄 Licence
 

@@ -55,7 +55,7 @@ export default function SignUp() {
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Inscription</h1>
           <p className="text-muted-foreground">
-            Créez votre compte TaskForge
+            Créez votre compte TaskFlow
           </p>
         </div>
 
