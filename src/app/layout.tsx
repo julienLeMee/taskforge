@@ -9,6 +9,7 @@ import { auth } from '../../auth';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { ThemeToggleWrapper } from '@/components/layout/ThemeToggleWrapper';
+import { MainWrapper } from '@/components/layout/MainWrapper';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -41,10 +42,10 @@ export default async function RootLayout({
               <SidebarProvider>
                 <div className="flex flex-1">
                   <AppSidebar />
-                  <main className="flex-1 p-4">
+                  <MainWrapper>
                     <ThemeToggleWrapper />
                     {children}
-                  </main>
+                  </MainWrapper>
                 </div>
               </SidebarProvider>
             </div>
