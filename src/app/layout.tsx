@@ -8,7 +8,7 @@ import { SessionProvider } from 'next-auth/react';
 import { auth } from '../../auth';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { ThemeToggleWrapper } from '@/components/layout/ThemeToggleWrapper';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -41,18 +41,10 @@ export default async function RootLayout({
               <SidebarProvider>
                 <div className="flex flex-1">
                   <AppSidebar />
-                  {session ? (
-                    <main className="flex-1 p-4">
-                      <div className="flex items-center justify-end">
-                        <ThemeToggle />
-                      </div>
-                      {children}
-                    </main>
-                  ) : (
-                    <main className="flex-1">
-                      {children}
-                    </main>
-                  )}
+                  <main className={`${session ? 'flex-1 p-4' : 'flex-1'}`}>
+                    <ThemeToggleWrapper />
+                    {children}
+                  </main>
                 </div>
               </SidebarProvider>
             </div>
