@@ -41,7 +41,7 @@ export default async function RootLayout({
               <SidebarProvider>
                 <div className="flex flex-1">
                   <AppSidebar />
-                  <main className={`${session ? 'flex-1 p-4' : 'flex-1'}`}>
+                  <main className="flex-1 p-4">
                     <ThemeToggleWrapper />
                     {children}
                   </main>
