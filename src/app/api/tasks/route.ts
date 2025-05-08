@@ -1,7 +1,7 @@
 // src/app/api/tasks/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/../../auth";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { z } from "zod";
 
 const prisma = new PrismaClient();
@@ -21,9 +21,10 @@ export async function GET() {
       where: {
         userId: session.user.id,
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [
+        { order: 'asc' } as Prisma.TaskOrderByWithRelationInput,
+        { createdAt: 'desc' }
+      ]
     });
 
     // 3. Retourner les tâches au format JSON

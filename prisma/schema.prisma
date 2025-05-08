@@ -68,6 +68,7 @@ model Task {
   status        TaskStatus? @default(TODO)
   priority      Priority   @default(MEDIUM)
   link          String?
+  order         Int?
 
   // Organisation temporelle
   timeframe     Timeframe?  @default(UPCOMING)

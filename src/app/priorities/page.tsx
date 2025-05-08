@@ -311,12 +311,22 @@ export default function TasksPage() {
   const handleReorder = async (newTasks: Task[]) => {
     setTasks(newTasks);
     try {
-      // Optionally, you can save the new order to your backend
-      // await fetch("/api/tasks/reorder", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ tasks: newTasks }),
-      // });
+      // Assign new order values to the tasks
+      const tasksWithOrder = newTasks.map((task, index) => ({
+        id: task.id,
+        order: index
+      }));
+
+      // Save the new order to your backend
+      const response = await fetch("/api/tasks/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tasks: tasksWithOrder }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la sauvegarde de l'ordre des tâches");
+      }
     } catch (error) {
       console.error("Error saving task order:", error);
       toast({

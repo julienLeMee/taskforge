@@ -12,6 +12,7 @@ export type Task = {
   updatedAt: string;
   isDone: boolean;
   link: string | null;
+  order: number | null;
 };
 
 export type TaskFormData = {
