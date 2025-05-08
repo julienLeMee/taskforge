@@ -1,7 +1,9 @@
-import { prisma } from "@/lib/db";
+import { PrismaClient } from "@prisma/client";
 import { auth } from "#/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { projectSchema } from "@/lib/validations/project";
+
+const prisma = new PrismaClient();
 
 // GET - Récupérer un projet par son ID
 export async function GET(

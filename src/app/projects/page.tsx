@@ -241,12 +241,22 @@ export default function ProjectsPage() {
   const handleReorder = async (newProjects: Project[]) => {
     setProjects(newProjects);
     try {
-      // Optionally, you can save the new order to your backend
-      // await fetch("/api/projects/reorder", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ projects: newProjects }),
-      // });
+      // Assign new order values to the projects
+      const projectsWithOrder = newProjects.map((project, index) => ({
+        id: project.id,
+        order: index
+      }));
+
+      // Save the new order to the backend
+      const response = await fetch("/api/projects/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projects: projectsWithOrder }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la sauvegarde de l'ordre des projets");
+      }
     } catch (error) {
       console.error("Error saving project order:", error);
       toast({

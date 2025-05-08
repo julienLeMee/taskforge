@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "#/auth";
-import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function GET() {
   try {
@@ -18,9 +19,10 @@ export async function GET() {
       where: {
         userId: session.user.id,
       },
-      orderBy: {
-        updatedAt: 'desc',
-      },
+      orderBy: [
+        { order: 'asc' } as Prisma.ProjectOrderByWithRelationInput,
+        { updatedAt: 'desc' }
+      ],
     });
 
     return NextResponse.json(projects);

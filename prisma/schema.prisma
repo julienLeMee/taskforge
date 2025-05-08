@@ -121,6 +121,7 @@ model Project {
   status      String      @default("En cours")
   nextSteps   Json?       // Pour stocker les étapes avec leur statut (complété ou non)
   deployment  String?     @db.Text  // Informations de mise en ligne
+  order       Int?        // Pour stocker l'ordre d'affichage
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   userId      String

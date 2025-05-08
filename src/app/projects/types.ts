@@ -10,6 +10,7 @@ export interface Project {
   status: string;
   nextSteps: NextStep[];
   deployment: string | null;
+  order: number | null;
   createdAt: Date;
   updatedAt: Date;
   userId: string;
