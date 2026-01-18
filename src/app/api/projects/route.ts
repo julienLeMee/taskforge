@@ -7,14 +7,11 @@ const prisma = new PrismaClient();
 export async function GET() {
   try {
     const session = await auth();
-    console.log("Session:", session);
 
     if (!session?.user) {
-      console.log("No session or user found");
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
-    console.log("User ID:", session.user.id);
     const projects = await prisma.project.findMany({
       where: {
         userId: session.user.id,
