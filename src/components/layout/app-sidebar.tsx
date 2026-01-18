@@ -10,6 +10,7 @@ import {
   Menu,
   ArrowUpDown,
   Settings,
+  StickyNote,
 } from "lucide-react"
 import {
   Sidebar,
@@ -47,6 +48,11 @@ const items = [
     title: "Projets",
     href: "/projects",
     icon: FolderKanban,
+  },
+  {
+    title: "Notes",
+    href: "/notes",
+    icon: StickyNote,
   },
 //   {
 //     title: "Tâches",

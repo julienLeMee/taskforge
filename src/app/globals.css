@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -185,4 +186,33 @@
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+}
+
+/* TipTap Task List Styles */
+.tiptap ul[data-type="taskList"] {
+  @apply list-none p-0 m-0;
+}
+
+.tiptap ul[data-type="taskList"] > li {
+  @apply flex items-center gap-2 my-1;
+}
+
+.tiptap ul[data-type="taskList"] > li > label {
+  @apply flex-shrink-0;
+}
+
+.tiptap ul[data-type="taskList"] > li > label input[type="checkbox"] {
+  @apply w-4 h-4 cursor-pointer accent-primary align-middle;
+}
+
+.tiptap ul[data-type="taskList"] > li > div {
+  @apply flex-1;
+}
+
+.tiptap ul[data-type="taskList"] > li > div p {
+  @apply m-0;
+}
+
+.tiptap ul[data-type="taskList"] > li[data-checked="true"] > div {
+  @apply line-through opacity-60;
 }

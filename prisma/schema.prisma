@@ -50,6 +50,7 @@ model User {
   sessions      Session[]
   tasks         Task[]
   projects      Project[]
+  notes         Note[]
 }
 
 model VerificationToken {
@@ -126,4 +127,16 @@ model Project {
   updatedAt   DateTime    @updatedAt
   userId      String
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Modèle pour les notes
+model Note {
+  id        String   @id @default(cuid())
+  title     String
+  content   Json?    // Contenu TipTap en JSON
+  order     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
