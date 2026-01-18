@@ -52,7 +52,12 @@ export function ProjectRow({
           <div {...attributes} {...listeners} className="cursor-grab hover:cursor-grabbing">
             <GripVertical className="h-4 w-4 text-muted-foreground" />
           </div>
-          <span>{project.title}</span>
+          <span
+            onClick={() => onUpdateProject(project)}
+            className="cursor-pointer hover:underline"
+          >
+            {project.title}
+          </span>
         </div>
       </TableCell>
       <TableCell>
@@ -84,20 +89,20 @@ export function ProjectRow({
       </TableCell>
       <TableCell>
         {project.nextSteps && project.nextSteps.length > 0 ? (
-          <div className="space-y-1">
+          <div className="space-y-1 max-w-full">
             {project.nextSteps.map((step, index) => (
               <div
                 key={index}
-                className={`flex items-center gap-2 text-sm ${
+                className={`flex items-start gap-2 text-sm ${
                   step.completed ? "line-through text-muted-foreground" : ""
                 }`}
               >
                 <Checkbox
                   checked={step.completed}
                   onCheckedChange={() => onNextStepToggle(project.id, step.text)}
-                  className="h-4 w-4"
+                  className="h-4 w-4 mt-0.5 shrink-0"
                 />
-                <span>{step.text}</span>
+                <span className="whitespace-normal break-words">{step.text}</span>
               </div>
             ))}
           </div>

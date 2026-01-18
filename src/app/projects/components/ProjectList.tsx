@@ -37,14 +37,14 @@ export function ProjectList({
 
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <Table>
+      <Table className="table-fixed w-full">
         <TableHeader>
           <TableRow>
-            <TableHead>Projet</TableHead>
-            <TableHead>Statut</TableHead>
+            <TableHead className="w-[140px]">Projet</TableHead>
+            <TableHead className="w-[100px]">Statut</TableHead>
             <TableHead>Prochaines étapes</TableHead>
-            {showDeployment && <TableHead>Déploiement</TableHead>}
-            <TableHead className="text-right">Actions</TableHead>
+            {showDeployment && <TableHead className="w-[120px]">Déploiement</TableHead>}
+            <TableHead className="w-[80px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
