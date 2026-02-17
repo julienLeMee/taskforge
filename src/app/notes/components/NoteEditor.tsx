@@ -12,6 +12,8 @@ import {
   List,
   ListOrdered,
   ListChecks,
+  Code,
+  CodeSquare,
 } from "lucide-react";
 import { useEffect } from 'react';
 import { getExtensions } from '../lib/tiptap-extensions';
@@ -125,6 +127,23 @@ export function NoteEditor({ content, onChange }: NoteEditorProps) {
           aria-label="Liste de tâches"
         >
           <ListChecks className="h-4 w-4" />
+        </Toggle>
+        <div className="w-px h-6 bg-border mx-1" />
+        <Toggle
+          size="sm"
+          pressed={editor.isActive('code')}
+          onPressedChange={() => editor.chain().focus().toggleCode().run()}
+          aria-label="Code inline"
+        >
+          <Code className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive('codeBlock')}
+          onPressedChange={() => editor.chain().focus().toggleCodeBlock().run()}
+          aria-label="Bloc de code"
+        >
+          <CodeSquare className="h-4 w-4" />
         </Toggle>
       </div>
       <EditorContent editor={editor} />

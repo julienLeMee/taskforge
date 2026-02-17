@@ -38,16 +38,19 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <div className="relative min-h-screen">
-              {/* <Header /> */}
-              <SidebarProvider>
-                <div className="flex flex-1">
-                  <AppSidebar />
-                  <MainWrapper>
-                    <ThemeToggleWrapper />
-                    {children}
-                  </MainWrapper>
-                </div>
-              </SidebarProvider>
+              {session ? (
+                <SidebarProvider>
+                  <div className="flex flex-1">
+                    <AppSidebar />
+                    <MainWrapper>
+                      <ThemeToggleWrapper />
+                      {children}
+                    </MainWrapper>
+                  </div>
+                </SidebarProvider>
+              ) : (
+                children
+              )}
             </div>
           </ThemeProvider>
         </SessionProvider>
